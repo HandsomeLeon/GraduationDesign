@@ -1,0 +1,22 @@
+spring:
+  application: 
+    name: 'hrm-system'
+  datasource:
+    username: root
+    password: 123456
+    url: 'jdbc:mysql://localhost:3306/hrm?serverTimezone=Asia/Shanghai'
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  type-aliases-package: org.design.model
+  mapper-locations: 'classpath*:org/**/*Mapper.xml'
+  ### 打印SQL语句
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+
+ 

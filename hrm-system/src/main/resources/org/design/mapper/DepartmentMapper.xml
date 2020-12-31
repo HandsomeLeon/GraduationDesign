@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.design.mapper.DepartmentMapper">
+
+    <insert id="save" parameterType="Department">
+        insert into department values(null, #{name}, #{remark});
+
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+
+    <delete id="delete" parameterType="Integer">
+        delete from department where id = #{id};
+    </delete>
+
+    <update id="update" parameterType="Department">
+        update department
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="remark != null">
+                remark = #{remark}
+            </if>
+        </set>
+        where id = #{id};
+    </update>
+
+    <select id="get" parameterType="Integer" resultType="Department">
+        select * from department where id = #{id};
+    </select>
+
+    <select id="findAll" resultType="Department">
+        select * from department;
+    </select>
+
+    <select id="findExample" parameterType="Department" resultType="Department">
+        select * from department where name like concat('%', #{name}, '%')
+    </select>
+</mapper>

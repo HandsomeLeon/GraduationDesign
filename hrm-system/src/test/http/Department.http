@@ -1,0 +1,48 @@
+POST http://localhost:8080/department/save
+Content-Type: application/json
+
+{
+  "name": "维修部",
+  "remark": "维修东西"
+}
+
+###
+POST http://localhost:8080/department/delete
+Content-Type: application/json
+
+{
+  "id": 15
+}
+
+###
+POST http://localhost:8080/department/update
+Content-Type: application/json
+
+{
+  "id": "15",
+  "name": "维修部"
+}
+
+###
+POST http://localhost:8080/department/get
+Content-Type: application/json
+
+{
+  "id": 2
+}
+
+###
+POST http://localhost:8080/department/findAll
+Content-Type: application/json
+
+{
+
+}
+
+###
+POST http://localhost:8080/department/findExample
+Content-Type: application/json
+
+{
+  "name": "维修"
+}

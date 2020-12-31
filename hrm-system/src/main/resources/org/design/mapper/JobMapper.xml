@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.design.mapper.JobMapper">
+    <insert id="save" parameterType="Job">
+        insert into job values(null, #{name}, #{remark});
+
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+
+    <delete id="delete" parameterType="Integer">
+        delete from job where id = #{id};
+    </delete>
+
+    <update id="update" parameterType="Job">
+        update job
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="remark != null">
+                remark = #{remark}
+            </if>
+        </set>
+        where id = #{id};
+    </update>
+
+    <select id="get" parameterType="Integer" resultType="Job">
+        select * from job where id = #{id};
+    </select>
+
+    <select id="findAll" resultType="Job">
+        select * from job;
+    </select>
+
+    <select id="findExample" parameterType="Job" resultType="Job">
+        select * from job where name like concat('%', #{name}, '%')
+    </select>
+</mapper>

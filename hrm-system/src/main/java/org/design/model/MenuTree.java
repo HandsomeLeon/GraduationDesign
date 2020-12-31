@@ -7,7 +7,7 @@ public class MenuTree {
 	private int id;
 	private String name;
 	
-	private List<com.web.oa.pojo.SysPermission> children; //子菜单
+	private List<SysPermission> children; //子菜单
 
 	public int getId() {
 		return id;
@@ -25,11 +25,11 @@ public class MenuTree {
 		this.name = name;
 	}
 
-	public List<com.web.oa.pojo.SysPermission> getChildren() {
+	public List<SysPermission> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<com.web.oa.pojo.SysPermission> children) {
+	public void setChildren(List<SysPermission> children) {
 		this.children = children;
 	}
 

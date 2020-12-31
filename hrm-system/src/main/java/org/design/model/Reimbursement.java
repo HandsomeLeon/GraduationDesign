@@ -12,7 +12,7 @@ public class Reimbursement {
 
     private String remark;
 
-    private Date createdate;
+    private Date createTime;
 
     private Integer state;
 
@@ -50,12 +50,12 @@ public class Reimbursement {
 		this.remark = remark;
 	}
 
-	public Date getCreatedate() {
-		return createdate;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setCreatedate(Date createdate) {
-		this.createdate = createdate;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
 	public Integer getState() {

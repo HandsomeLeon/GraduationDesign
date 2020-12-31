@@ -9,13 +9,13 @@ public class SysPermission {
 
     private String url;
 
-    private String percode;
+    private String permissionCode;
 
-    private Long parentid;
+    private Long parentId;
 
-    private String parentids;
+    private String parentIds;
 
-    private String sortstring;
+    private String sortString;
 
     private String available;
 
@@ -51,36 +51,36 @@ public class SysPermission {
         this.url = url == null ? null : url.trim();
     }
 
-    public String getPercode() {
-        return percode;
+    public String getPermissionCode() {
+        return permissionCode;
     }
 
-    public void setPercode(String percode) {
-        this.percode = percode == null ? null : percode.trim();
+    public void setPermissionCode(String permissionCode) {
+        this.permissionCode = permissionCode;
     }
 
-    public Long getParentid() {
-        return parentid;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setParentid(Long parentid) {
-        this.parentid = parentid;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
-    public String getParentids() {
-        return parentids;
+    public String getParentIds() {
+        return parentIds;
     }
 
-    public void setParentids(String parentids) {
-        this.parentids = parentids == null ? null : parentids.trim();
+    public void setParentIds(String parentIds) {
+        this.parentIds = parentIds;
     }
 
-    public String getSortstring() {
-        return sortstring;
+    public String getSortString() {
+        return sortString;
     }
 
-    public void setSortstring(String sortstring) {
-        this.sortstring = sortstring == null ? null : sortstring.trim();
+    public void setSortString(String sortString) {
+        this.sortString = sortString;
     }
 
     public String getAvailable() {
@@ -88,14 +88,21 @@ public class SysPermission {
     }
 
     public void setAvailable(String available) {
-        this.available = available == null ? null : available.trim();
+        this.available = available;
     }
 
-	@Override
-	public String toString() {
-		return "SysPermission [id=" + id + ", name=" + name + ", type=" + type + ", url=" + url + ", percode=" + percode
-				+ ", parentid=" + parentid + ", parentids=" + parentids + ", sortstring=" + sortstring + ", available="
-				+ available + "]";
-	}
-    
+    @Override
+    public String toString() {
+        return "SysPermission{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", url='" + url + '\'' +
+                ", permissionCode='" + permissionCode + '\'' +
+                ", parentId=" + parentId +
+                ", parentIds='" + parentIds + '\'' +
+                ", sortString='" + sortString + '\'' +
+                ", available='" + available + '\'' +
+                '}';
+    }
 }

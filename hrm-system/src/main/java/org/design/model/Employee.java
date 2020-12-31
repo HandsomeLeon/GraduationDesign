@@ -104,6 +104,14 @@ public class Employee {
         this.job = job;
     }
 
+    public SysRole getRole() {
+        return role;
+    }
+
+    public void setRole(SysRole role) {
+        this.role = role;
+    }
+
     public Integer getManagerId() {
         return managerId;
     }

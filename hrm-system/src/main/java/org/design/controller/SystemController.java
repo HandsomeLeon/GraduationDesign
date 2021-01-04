@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/system")
+//@RequestMapping("/system")
 public class SystemController {
 
     @RequestMapping("/login")
@@ -29,8 +29,12 @@ public class SystemController {
             }
 
         }
-
-
         return "login";
+    }
+
+    // 登录成功后跳转页面
+    @RequestMapping("/index")
+    public String index() {
+        return "index";
     }
 }

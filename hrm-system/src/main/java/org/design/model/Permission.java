@@ -1,6 +1,6 @@
 package org.design.model;
 
-public class SysPermission {
+public class Permission {
     private Long id;
 
     private String name;

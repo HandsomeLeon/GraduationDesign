@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.design.mapper.RolePermissionMapper">
+    
+    <resultMap id="BaseMap" type="org.design.model.RolePermission">
+        <id column="id" property="id" />
+        <result column="sys_role_id" property="sysRoleId" />
+        <result column="sys_permission_id" property="sysPermissionId" />
+    </resultMap>
+
+    <select id="findPermissionListByRoleId" parameterType="Integer" resultMap="BaseMap">
+        select * from sys_role_permission where sys_role_id = #{sysRoleId};
+    </select>
+
+</mapper>

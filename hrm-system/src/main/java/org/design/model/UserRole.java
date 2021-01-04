@@ -1,6 +1,6 @@
 package org.design.model;
 
-public class SysUserRole {
+public class UserRole {
     private Integer id;
 
     private String sysUserId;

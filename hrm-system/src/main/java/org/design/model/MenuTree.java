@@ -7,7 +7,7 @@ public class MenuTree {
 	private int id;
 	private String name;
 	
-	private List<SysPermission> children; //子菜单
+	private List<Permission> children; //子菜单
 
 	public int getId() {
 		return id;
@@ -25,11 +25,11 @@ public class MenuTree {
 		this.name = name;
 	}
 
-	public List<SysPermission> getChildren() {
+	public List<Permission> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<SysPermission> children) {
+	public void setChildren(List<Permission> children) {
 		this.children = children;
 	}
 

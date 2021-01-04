@@ -3,6 +3,7 @@ package org.design.model;
 import java.time.LocalDateTime;
 
 public class Employee {
+
     /**
      * id
      * 自增 插入数据时不需要传参数
@@ -32,7 +33,7 @@ public class Employee {
     /**
      * 员工所属角色
      */
-    private SysRole role;
+    private Role role;
 
     /**
      * 员工上级ID
@@ -62,7 +63,7 @@ public class Employee {
     /**
      * 账号创建时间
      */
-    private LocalDateTime createDate;
+    private LocalDateTime createTime;
 
     public Integer getId() {
         return id;
@@ -104,11 +105,11 @@ public class Employee {
         this.job = job;
     }
 
-    public SysRole getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(SysRole role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -152,12 +153,12 @@ public class Employee {
         this.birthday = birthday;
     }
 
-    public LocalDateTime getCreateDate() {
-        return createDate;
+    public LocalDateTime getCreateTime() {
+        return createTime;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
     @Override
@@ -174,7 +175,7 @@ public class Employee {
                 ", phone='" + phone + '\'' +
                 ", gender='" + gender + '\'' +
                 ", birthday=" + birthday +
-                ", createDate=" + createDate +
+                ", createTime=" + createTime +
                 '}';
     }
 }

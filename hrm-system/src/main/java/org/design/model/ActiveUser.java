@@ -20,8 +20,8 @@ public class ActiveUser implements Serializable {
 	private String username;// 用户名称
 	 private Long managerId;
 
-	private List<SysPermission> menus;// 菜单
-	private List<SysPermission> permissions;// 权限
+	private List<Permission> menus;// 菜单
+	private List<Permission> permissions;// 权限
 	private List<MenuTree> menuTree;
 	
 	public long getId() {
@@ -57,19 +57,19 @@ public class ActiveUser implements Serializable {
 		this.userid = userid;
 	}
 
-	public List<SysPermission> getMenus() {
+	public List<Permission> getMenus() {
 		return menus;
 	}
 
-	public void setMenus(List<SysPermission> menus) {
+	public void setMenus(List<Permission> menus) {
 		this.menus = menus;
 	}
 
-	public List<SysPermission> getPermissions() {
+	public List<Permission> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(List<SysPermission> permissions) {
+	public void setPermissions(List<Permission> permissions) {
 		this.permissions = permissions;
 	}
 

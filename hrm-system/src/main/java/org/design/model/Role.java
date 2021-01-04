@@ -2,14 +2,14 @@ package org.design.model;
 
 import java.util.List;
 
-public class SysRole {
+public class Role {
     private Integer id;
 
     private String name;
 
     private String available;
     
-    private List<SysPermission> permissionList;
+    private List<Permission> permissionList;
 
     public Integer getId() {
 		return id;
@@ -35,11 +35,11 @@ public class SysRole {
         this.available = available == null ? null : available.trim();
     }
 
-	public List<SysPermission> getPermissionList() {
+	public List<Permission> getPermissionList() {
 		return permissionList;
 	}
 
-	public void setPermissionList(List<SysPermission> permissionList) {
+	public void setPermissionList(List<Permission> permissionList) {
 		this.permissionList = permissionList;
 	}
 

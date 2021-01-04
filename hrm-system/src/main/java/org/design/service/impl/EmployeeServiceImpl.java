@@ -67,4 +67,14 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new ServiceException("获取数据失败");
         }
     }
+
+    @Override
+    public Employee findByUsername(String username) {
+
+        Employee employee = employeeMapper.findByUsername(username);
+        if (employee == null) {
+            throw new ServiceException("获取数据失败");
+        }
+        return employee;
+    }
 }

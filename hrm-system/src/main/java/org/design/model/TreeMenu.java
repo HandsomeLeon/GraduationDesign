@@ -12,7 +12,7 @@ public class TreeMenu {
 	private int id;
 	private String name;
 	
-	private List<SysPermission> subMenu;//子菜单
+	private List<Permission> subMenu;//子菜单
 
 	public int getId() {
 		return id;
@@ -30,11 +30,11 @@ public class TreeMenu {
 		this.name = name;
 	}
 
-	public List<SysPermission> getSubMenu() {
+	public List<Permission> getSubMenu() {
 		return subMenu;
 	}
 
-	public void setSubMenu(List<SysPermission> subMenu) {
+	public void setSubMenu(List<Permission> subMenu) {
 		this.subMenu = subMenu;
 	}
 	

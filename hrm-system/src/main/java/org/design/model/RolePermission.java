@@ -1,6 +1,6 @@
 package org.design.model;
 
-public class SysRolePermission {
+public class RolePermission {
     private String id;
 
     private String sysRoleId;

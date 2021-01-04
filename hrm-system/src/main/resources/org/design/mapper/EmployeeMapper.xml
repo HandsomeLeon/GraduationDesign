@@ -1,7 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.design.mapper.EmployeeMapper">
-<!--    <insert id="save" parameterType="Employee">-->
-<!--        insert into employee values(null, );-->
-<!--    </insert>-->
+
+    <insert id="save" parameterType="Employee">
+        insert into employee values(null, #{username}, #{password}, #{departmentId}, #{jobId}, #{roleId}, #{managerId},
+        #{address}, #{phone}, #{gender}, #{birthday}, #{createTime});
+
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+
+    <delete id="delete" parameterType="Integer">
+        delete from employee where id = #{id};
+    </delete>
+
+    <update id="update" parameterType="Employee">
+        update employee
+        <set>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday}
+            </if>
+        </set>
+        where id = #{id};
+    </update>
+
+    <select id="get" parameterType="Integer" resultType="Employee">
+        select * from employee where id = #{id};
+    </select>
+
+    <select id="findAll" resultType="Employee">
+        select * from employee;
+    </select>
+
+    <select id="findExample" parameterType="Employee" resultType="Employee">
+        select * from employee where username like concat('%', #{usernmae}, '%');
+    </select>
+
+    <select id="findByUsername" parameterType="String" resultType="Employee">
+        select * from employee where username = #{username};
+    </select>
+
 </mapper>

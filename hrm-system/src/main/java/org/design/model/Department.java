@@ -15,11 +15,6 @@ public class Department {
      */
     private String remark;
 
-    public Department() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
     public Integer getID() {
         return id;
     }

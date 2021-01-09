@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.design.mapper.PermissionMapper">
 
-    <select id="findPermissionListByUsername" parameterType="String" resultType="Permission">
+    <select id="findByUsername" parameterType="String" resultType="Permission">
         SELECT *
 		FROM sys_permission
 		WHERE TYPE like '%permission%'

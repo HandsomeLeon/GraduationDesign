@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface PermissionMapper {
 
-    List<Permission> findPermissionListByUsername(String username);
+    List<Permission> findByUsername(String username);
+
 }

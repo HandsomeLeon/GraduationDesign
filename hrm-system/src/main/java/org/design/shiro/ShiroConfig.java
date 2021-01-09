@@ -3,9 +3,9 @@ package org.design.shiro;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,7 +48,7 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        //以下注释部分，还可以将配置定义到yaml中
+        //以下注释部分，还可以将配置定义到yml中
         Map<String, String> map = new HashMap<>();
 
         //表示静态资源可以匿名访问
@@ -75,4 +75,12 @@ public class ShiroConfig {
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
     }
+
+//    @Bean
+//    public FormAuthenticationFilter formAuthenticationFilter() {
+//        FormAuthenticationFilter filter = new FormAuthenticationFilter();
+//        filter.setUsernameParam("username");
+//        filter.setPasswordParam("password");
+//        return filter;
+//    }
 }

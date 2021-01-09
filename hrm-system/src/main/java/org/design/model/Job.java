@@ -15,17 +15,6 @@ public class Job {
 	 */
 	private String remark;
 	
-	public Job(String name, String remark) {
-		super();
-		this.name = name;
-		this.remark = remark;
-	}
-	
-	public Job() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
 	public Integer getId() {
 		return id;
 	}

@@ -50,19 +50,19 @@ public class CustomizeRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 
+        System.out.println("正在进行验证");
         if (authenticationToken.getPrincipal() == null) {
             return null;
         }
 
         String username = authenticationToken.getPrincipal().toString();
-        Employee user = employeeService.findByUsername(username);
+        Employee employee = employeeService.findByUsername(username);
 
-        if (user == null) {
+        if (employee == null) {
             return null;
         }
 
-        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(username, user.getPassword(), getName());
-
+        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(employee, employee.getPassword(), "CustomizeRealm");
         return authenticationInfo;
     }
 }

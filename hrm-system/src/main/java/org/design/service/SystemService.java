@@ -8,4 +8,5 @@ public interface SystemService {
 
     List<Permission> findPermissionListByUsername(String username);
 
+    List<Permission> findPermissionList();
 }

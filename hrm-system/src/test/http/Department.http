@@ -36,7 +36,6 @@ POST http://localhost:8080/department/findAll
 Content-Type: application/json
 
 {
-
 }
 
 ###

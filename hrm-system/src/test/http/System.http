@@ -1,0 +1,30 @@
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "danny",
+  "password": "123456"
+}
+
+###
+POST http://localhost:8080/login?username=zhang&password=123456
+
+###
+POST http://localhost:8080/index
+
+###
+POST http://localhost:8080/employee/findExample
+Content-Type: application/json
+
+{
+  "username": "zhang",
+  "password": "123456"
+}
+
+###
+POST http://localhost:8080/employee/get
+Content-Type: application/json
+
+{
+  "id": 1
+}

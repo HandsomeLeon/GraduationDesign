@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.design.mapper.EmployeeMapper">
+    <resultMap id="BaseMap" type="Employee">
+        <id property="id" column="id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="managerId" column="managerId" />
+        <result property="address" column="address" />
+        <result property="phone" column="phone" />
+        <result property="gender" column="gender" />
+        <result property="birthday" column="birthday" />
+        <result property="createTime" column="create_time" />
+        <association property="department" javaType="Department">
+            <id column="id" property="id" />
+        </association>
+        <association property="job" javaType="Job">
+            <id column="id" property="id" />
+        </association>
+        <association property="role"  javaType="Role">
+            <id column="id" property="id" />
+        </association>
+    </resultMap>
 
     <insert id="save" parameterType="Employee">
-        insert into employee values(null, #{username}, #{password}, #{departmentId}, #{jobId}, #{roleId}, #{managerId},
-        #{address}, #{phone}, #{gender}, #{birthday}, #{createTime});
-
-        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
-            SELECT LAST_INSERT_ID();
-        </selectKey>
+        insert into employee values(null, #{username}, #{password}, #{departmentId}, #{jobId}, #{roleId}
+        #{managerId}, #{address}, #{phone}, #{gender}, #{birthday}, #{createTime});
     </insert>
 
-    <delete id="delete" parameterType="Integer">
+    <delete id="delete" parameterType="Integer" >
         delete from employee where id = #{id};
     </delete>
 
@@ -22,32 +38,25 @@
                 address = #{address},
             </if>
             <if test="phone != null">
-                phone = #{phone},
-            </if>
-            <if test="gender != null">
-                gender = #{gender},
-            </if>
-            <if test="birthday != null">
-                birthday = #{birthday}
+                phone = #{phone}
             </if>
         </set>
         where id = #{id};
     </update>
 
-    <select id="get" parameterType="Integer" resultType="Employee">
+    <select id="get" parameterType="Integer" resultMap="BaseMap">
         select * from employee where id = #{id};
     </select>
 
-    <select id="findAll" resultType="Employee">
+    <select id="findAll" resultMap="BaseMap">
         select * from employee;
     </select>
 
-    <select id="findExample" parameterType="Employee" resultType="Employee">
-        select * from employee where username like concat('%', #{usernmae}, '%');
+    <select id="findExample" parameterType="Employee" resultMap="BaseMap">
+        select * from employee where username like concat('%', #{username}, '%');
     </select>
 
-    <select id="findByUsername" parameterType="String" resultType="Employee">
+    <select id="findByUsername" parameterType="String" resultMap="BaseMap">
         select * from employee where username = #{username};
     </select>
-
 </mapper>

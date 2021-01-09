@@ -39,10 +39,8 @@ public class EmployeeController {
 
     @RequestMapping("/get")
     public Employee get(@RequestBody Map<String, Object> data) {
-
         Integer id = (Integer) data.get("id");
-        Employee employee = employeeService.get(id);
-        return employee;
+        return employeeService.get(id);
     }
 
     @RequestMapping("/findAll")

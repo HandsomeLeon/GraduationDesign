@@ -1,5 +1,6 @@
 package org.design.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.design.model.MenuTree;
 import org.design.model.Permission;
 
@@ -11,6 +12,6 @@ public interface PermissionMapper {
 
     List<MenuTree> findOwnedMenu(String username);
 
-    List<Permission> findSubPermission(String username, String parentId);
+    List<Permission> findSubPermission(@Param(value = "username") String username, @Param(value = "parentId") String parentId);
 
 }

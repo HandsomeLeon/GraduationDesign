@@ -50,6 +50,7 @@ public class SystemController {
     public String index(Model model) {
         Employee employee = (Employee) SecurityUtils.getSubject().getPrincipal();
         List<MenuTree> menuTreeList = systemService.findMenuTreeList(employee.getUsername());
+        model.addAttribute("employee", employee.getUsername());
         model.addAttribute("menuTreeList", menuTreeList);
         return "index";
     }

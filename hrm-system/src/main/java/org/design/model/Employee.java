@@ -1,7 +1,10 @@
 package org.design.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.LocalDateTime;
 
+@JsonIgnoreProperties(value = {"password"})
 public class Employee {
 
     /**
@@ -166,7 +169,6 @@ public class Employee {
         return "Employee{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", department=" + department +
                 ", job=" + job +
                 ", role=" + role +

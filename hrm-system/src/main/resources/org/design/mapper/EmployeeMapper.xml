@@ -11,6 +11,7 @@
         <result property="gender" column="gender" />
         <result property="birthday" column="birthday" />
         <result property="createTime" column="create_time" />
+        <result property="managerId" column="manager_id" />
         <association property="department" javaType="Department">
             <id column="id" property="id" />
         </association>

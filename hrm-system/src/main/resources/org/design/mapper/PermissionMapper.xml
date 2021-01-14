@@ -2,7 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.design.mapper.PermissionMapper">
 
-    <select id="findByUsername" parameterType="String" resultType="Permission">
+    <resultMap id="BaseMap" type="Permission">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="url" property="url"/>
+        <result column="permission_code" property="permissionCode"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_ids" property="parentIds"/>
+        <result column="sort_string" property="sortString"/>
+        <result column="available" property="available"/>
+    </resultMap>
+
+    <resultMap id="MenuTreeMap" type="MenuTree">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+    </resultMap>
+
+    <!--	<resultMap type="MenuTree" id="menuAndPermissionResultMap">-->
+
+    <!--		<id column="id" property="id"/>-->
+    <!--		<result column="name" property="name"/>-->
+    <!--		<collection property="children" select="getSubMenuAndPermissions" column="id">-->
+    <!--			<id column="id" property="id"/>-->
+    <!--			<result column="name" property="name"/>-->
+    <!--			<result column="type" property="type" />-->
+    <!--			<result column="url" property="url" />-->
+    <!--			<result column="permission_code" property="permissionCode"/>-->
+    <!--			<result column="parent_id" property="parentId"/>-->
+    <!--			<result column="parent_ids" property="parentIds" />-->
+    <!--			<result column="sort_string" property="sortString" />-->
+    <!--			<result column="available" property="available"/>-->
+    <!--		</collection>-->
+    <!--	</resultMap>-->
+
+    <select id="findByUsername" parameterType="String" resultMap="BaseMap">
         SELECT *
 		FROM sys_permission
 		WHERE TYPE like '%permission%'
@@ -14,5 +48,31 @@
 		FROM sys_user_role
 		WHERE sys_user_id = #{username}))
     </select>
+
+    <select id="findOwnedMenu" parameterType="String" resultMap="MenuTreeMap">
+		SELECT id, name
+		FROM sys_permission
+		WHERE TYPE = 'menu'
+        AND id IN
+		(SELECT sys_permission_id
+		FROM sys_role_permission
+		WHERE sys_role_id IN
+		(SELECT sys_role_id
+		FROM sys_user_role
+		WHERE sys_user_id = #{username})) ORDER BY `id` ASC;
+	</select>
+
+    <select id="findSubPermission" parameterType="String" resultMap="BaseMap">
+		SELECT *
+		FROM sys_permission
+		WHERE TYPE = 'menu|permission'
+        AND id IN
+		(SELECT sys_permission_id
+		FROM sys_role_permission
+		WHERE sys_role_id IN
+		(SELECT sys_role_id
+		FROM sys_user_role
+		WHERE sys_user_id = #{username} and parent_id = #{parentId})) order by `id` asc;
+	</select>
 
 </mapper>

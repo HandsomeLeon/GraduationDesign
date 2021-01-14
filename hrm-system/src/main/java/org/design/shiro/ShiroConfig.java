@@ -16,9 +16,9 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
-    //从容器中拿去url配置规则(需在yml配置文件中设置url，并且需要创建ShiroProperties类)
-//    @Autowired
-//    private ShiroProperties shiroProperties;
+    // 从容器中拿去url配置规则(需在yml配置文件中设置url，并且需要创建ShiroProperties类)
+    //@Autowired
+    //private ShiroProperties shiroProperties;
 
     @Bean
     @ConditionalOnMissingBean

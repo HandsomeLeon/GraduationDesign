@@ -1,6 +1,5 @@
 package org.design.controller;
 
-import org.design.model.Department;
 import org.design.model.Employee;
 import org.design.service.EmployeeService;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -28,3 +28,11 @@ Content-Type: application/json
 {
   "id": 1
 }
+
+###
+POST http://localhost:8080/findMenuTreeList
+Content-Type: application/json
+Cookie: Idea-95f9a482=571143fd-0d86-4e25-942b-5518fe0074f0; JSESSIONID=CAF191018FE01D27B7EAE8385FD1042A
+
+{
+}

@@ -55,4 +55,12 @@ public class SystemController {
         return "index";
     }
 
+
+    @RequestMapping("/findDepartmentList")
+    public String findDepartment() {
+        /*System.out.println(page);
+        System.out.println(limit);*/
+        return "department_list";
+    }
+
 }

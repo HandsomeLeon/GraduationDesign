@@ -1,6 +1,9 @@
 package org.design.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.design.mapper.JobMapper;
+import org.design.model.Department;
 import org.design.model.Employee;
 import org.design.model.Job;
 import org.design.service.JobService;
@@ -8,7 +11,9 @@ import org.design.utils.ServiceException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -50,22 +55,39 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> findAll() {
+    public Map<String, Object> findAll(Integer page, Integer limit) {
         List<Job> jobList = jobMapper.findAll();
-        if (jobList != null && jobList.size() > 0) {
-            return jobList;
-        } else {
+        if (jobList == null) {
             throw new ServiceException("获取数据失败");
         }
+        // 开启分页
+        PageHelper.startPage(page, limit);
+        PageInfo<Job> pageInfo = new PageInfo<>(jobList);
+        // 封装LayUI需要的数据格式
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", 0);
+        data.put("msg", "");
+        data.put("count", pageInfo.getTotal());
+        data.put("data", pageInfo.getList());
+        return data;
     }
 
     @Override
-    public List<Job> findExample(Job model) {
+    public Map<String, Object> findExample(Job model, Integer page, Integer limit) {
+
         List<Job> jobList = jobMapper.findExample(model);
-        if (jobList != null && jobList.size() > 0) {
-            return jobList;
-        } else {
+        if (jobList == null) {
             throw new ServiceException("获取数据失败");
         }
+        // 开启分页
+        PageHelper.startPage(page, limit);
+        PageInfo<Job> pageInfo = new PageInfo<>(jobList);
+        // 封装LayUI需要的数据格式
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", 0);
+        data.put("msg", "");
+        data.put("count", pageInfo.getTotal());
+        data.put("data", pageInfo.getList());
+        return data;
     }
 }

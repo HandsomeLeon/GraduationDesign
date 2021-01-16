@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -49,23 +50,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> findAll() {
+    public Map<String, Object> findAll(Integer page, Integer limit) {
         List<Employee> employeeList = employeeMapper.findAll();
-        if (employeeList != null && employeeList.size() > 0) {
-            return employeeList;
-        } else {
+        if (employeeList == null) {
             throw new ServiceException("获取数据失败");
         }
+        return null;
     }
 
     @Override
-    public List<Employee> findExample(Employee model) {
+    public Map<String, Object> findExample(Employee model, Integer page, Integer limit) {
         List<Employee> employeeList = employeeMapper.findExample(model);
-        if (employeeList != null && employeeList.size() > 0) {
-            return employeeList;
-        } else {
+        if (employeeList == null) {
             throw new ServiceException("获取数据失败");
         }
+        return null;
     }
 
     @Override

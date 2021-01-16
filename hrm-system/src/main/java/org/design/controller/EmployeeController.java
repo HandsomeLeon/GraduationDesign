@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -43,12 +42,14 @@ public class EmployeeController {
     }
 
     @RequestMapping("/findAll")
-    public List<Employee> findAll() {
-        return employeeService.findAll();
+    public Map<String, Object> findAll(Integer page, Integer limit) {
+        return employeeService.findAll(page, limit);
     }
 
     @RequestMapping("/findExample")
-    public List<Employee> findExample(@RequestBody Employee employee) {
-        return employeeService.findExample(employee);
+    public Map<String, Object> findExample(String username, Integer page, Integer limit) {
+        Employee employee = new Employee();
+        employee.setUsername(username);
+        return employeeService.findExample(employee, page, limit);
     }
 }

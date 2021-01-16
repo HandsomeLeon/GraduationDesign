@@ -1,6 +1,9 @@
 package org.design.service;
 
+import org.omg.CORBA.OBJ_ADAPTER;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * 增删改查 通用接口
@@ -38,12 +41,12 @@ public interface BaseService<T, ID> {
      * 查询全部数据方法
      * @return
      */
-    List<T> findAll();
+    Map<String, Object> findAll(Integer page, Integer limit);
 
     /**
      * 模糊查询方法
      * @param model
      * @return
      */
-    List<T> findExample(T model);
+    Map<String, Object> findExample(T model, Integer page, Integer limit);
 }

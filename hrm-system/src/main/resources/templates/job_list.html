@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>部门列表</title>
+    <title>Layui</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -12,18 +12,17 @@
     <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 
-<body>
-
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-    <legend>部门列表</legend>
-</fieldset>
+<body class="layui-bg-gray">
 
 <div class="demoTable" style="margin-top: 10px; margin-left: 20px;">
+    <!--    <form action="/department/findExample" method="post" class="layui-form">-->
     搜索部门：
     <div class="layui-inline">
         <input type="text" name="name" id="keyword" placeholder="部门名称" class="layui-input">
     </div>
     <button type="submit" class="layui-btn" id="search">搜索</button>
+    <!--        <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+    <!--    </form>-->
 </div>
 
 <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -62,11 +61,11 @@
                 }, {
                     field: 'name',
                     title: '部门名称',
-                    width: 600
+                    width: 700
                 }, {
                     field: 'remark',
                     title: '备注',
-                    width: 850
+                    width: 700
                 }, {
                     fixed: 'right',
                     title: '操作',
@@ -95,7 +94,12 @@
                 case 'isAll':
                     layer.msg(checkStatus.isAll ? '全选' : '未全选');
                     break;
-            }
+
+                //自定义头工具栏右侧图标 - 提示
+                case 'LAYTABLE_TIPS':
+                    layer.alert('这是工具栏右侧自定义的一个图标按钮');
+                    break;
+            };
         });
 
         //监听行工具事件
@@ -106,53 +110,25 @@
                 layer.confirm('真的删除行么', function (index) {
                     obj.del();
                     layer.close(index);
-                    var map = {
-                        "id": data.id
-                    };
-                    $.ajax({
-                        type: 'post',
-                        url: '/department/delete',
-                        contentType: 'application/json',
-                        data: JSON.stringify(map),
-                        success: function (response) {
-                            layer.msg(response);
-                        },
-                        error: function () {
-                            layer.msg("操作失败");
-                        }
-                    })
                 });
             } else if (obj.event === 'edit') {
-                // layer.prompt({
-                //     formType: 2,
-                //     value: data.name
-                // }, function (value, index) {
-                //     obj.update({
-                //         name: value
-                //     });
-                //     layer.close(index);
-                // });
-                layer.open({
-                    type: 2,
-                    title: '编辑部门信息',
-                    shadeClose: true,
-                    shade: 0.7,
-                    area: ['700px', '60%'],
-                    content: '/department/check/' + data.id, //iframe的url
-                    btn: ['取消', '确认'],
-
-                    end: function () {                   //请求回调，窗口销毁时执行
-                        location.reload();                  //窗口销毁时刷新主页面数据
-                    }
+                layer.prompt({
+                    formType: 2,
+                    value: data.email
+                }, function (value, index) {
+                    obj.update({
+                        email: value
+                    });
+                    layer.close(index);
                 });
             }
         });
 
-        <!-- 搜索并重新加载table -->
+        <!-- 搜索功能: 重新渲染table -->
         $('#search').click(function () {
             var inputVal = $('#keyword').val()
             table.reload('testReload', {
-                url: '/department/findExample',
+                url: 'department/findExample',
                 // ,methods:"post"
                 // request: {
                 //     pageName: 'page', //页码的参数名称，默认：page

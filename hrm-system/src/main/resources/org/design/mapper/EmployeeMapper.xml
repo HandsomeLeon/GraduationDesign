@@ -50,7 +50,7 @@
     </select>
 
     <select id="findAll" resultMap="BaseMap">
-        select * from employee;
+        select * from employee
     </select>
 
     <select id="findExample" parameterType="Employee" resultMap="BaseMap">

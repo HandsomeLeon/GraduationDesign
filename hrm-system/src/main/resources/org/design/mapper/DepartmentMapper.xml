@@ -32,7 +32,7 @@
     </select>
 
     <select id="findAll" resultType="Department">
-        select * from department;
+        select * from department
     </select>
 
     <select id="findExample" parameterType="Department" resultType="Department">

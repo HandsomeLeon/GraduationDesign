@@ -56,13 +56,14 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Map<String, Object> findAll(Integer page, Integer limit) {
+        // 开启分页
+        PageHelper.startPage(page, limit);
         List<Job> jobList = jobMapper.findAll();
         if (jobList == null) {
             throw new ServiceException("获取数据失败");
         }
-        // 开启分页
-        PageHelper.startPage(page, limit);
         PageInfo<Job> pageInfo = new PageInfo<>(jobList);
+
         // 封装LayUI需要的数据格式
         Map<String, Object> data = new HashMap<>();
         data.put("code", 0);
@@ -75,13 +76,14 @@ public class JobServiceImpl implements JobService {
     @Override
     public Map<String, Object> findExample(Job model, Integer page, Integer limit) {
 
+        // 开启分页
+        PageHelper.startPage(page, limit);
         List<Job> jobList = jobMapper.findExample(model);
         if (jobList == null) {
             throw new ServiceException("获取数据失败");
         }
-        // 开启分页
-        PageHelper.startPage(page, limit);
         PageInfo<Job> pageInfo = new PageInfo<>(jobList);
+
         // 封装LayUI需要的数据格式
         Map<String, Object> data = new HashMap<>();
         data.put("code", 0);

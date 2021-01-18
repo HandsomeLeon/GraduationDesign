@@ -30,9 +30,8 @@
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+        <button class="layui-btn" lay-event="batchDelete">批量删除</button>
+        <button class="layui-btn layui-btn-normal" lay-event="saveDepartment">新建部门</button>
     </div>
 </script>
 
@@ -58,7 +57,7 @@
                 [{
                     type: 'checkbox',
                     fixed: 'left',
-                    width: 100
+                    width: 106
                 }, {
                     field: 'name',
                     title: '部门名称',
@@ -84,16 +83,44 @@
         table.on('toolbar(test)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
             switch (obj.event) {
-                case 'getCheckData':
+                case 'batchDelete':
                     var data = checkStatus.data;
-                    layer.alert(JSON.stringify(data));
+                    var idList = [];
+                    for (let i = 0; i < data.length; i++) {
+                        idList.push(data[i].id);
+                    }
+                    //layer.alert(JSON.stringify(idList));
+                    if (idList.length > 0) {
+                        $.ajax({
+                            type: 'post',
+                            url: '/department/batchDelete',
+                            contentType: 'application/json',
+                            data: JSON.stringify(idList),
+                            success: function (response) {
+                                if (response === 'success') {
+                                    layer.msg('批量删除成功');
+                                }
+                            }
+                        });
+                        setTimeout( function(){
+                            location.reload();
+                        }, 500);
+                    } else {
+                        layer.msg("请选择数据");
+                    }
                     break;
-                case 'getCheckLength':
-                    var data = checkStatus.data;
-                    layer.msg('选中了：' + data.length + ' 个');
-                    break;
-                case 'isAll':
-                    layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                case 'saveDepartment':
+                    layer.open({
+                        type: 2,
+                        title: '新增部门',
+                        shadeClose: true,
+                        shade: 0.7,
+                        area: ['660px', '48%'],
+                        content: ['/department/savePage', 'no'], //iframe的url, no不显示滚动条
+                        end: function () {                   //请求回调，窗口销毁时执行
+                            location.reload();                  //窗口销毁时刷新主页面数据
+                        }
+                    });
                     break;
             }
         });
@@ -115,7 +142,9 @@
                         contentType: 'application/json',
                         data: JSON.stringify(map),
                         success: function (response) {
-                            layer.msg(response);
+                            if (response === 'success') {
+                                layer.msg('删除成功');
+                            }
                         },
                         error: function () {
                             layer.msg("操作失败");
@@ -123,24 +152,13 @@
                     })
                 });
             } else if (obj.event === 'edit') {
-                // layer.prompt({
-                //     formType: 2,
-                //     value: data.name
-                // }, function (value, index) {
-                //     obj.update({
-                //         name: value
-                //     });
-                //     layer.close(index);
-                // });
                 layer.open({
                     type: 2,
-                    title: '编辑部门信息',
+                    title: '编辑部门',
                     shadeClose: true,
                     shade: 0.7,
-                    area: ['700px', '60%'],
-                    content: '/department/check/' + data.id, //iframe的url
-                    btn: ['取消', '确认'],
-
+                    area: ['660px', '48%'],
+                    content: ['/department/updatePage/' + data.id, 'no'], //iframe的url, no不显示滚动条
                     end: function () {                   //请求回调，窗口销毁时执行
                         location.reload();                  //窗口销毁时刷新主页面数据
                     }
@@ -153,11 +171,6 @@
             var inputVal = $('#keyword').val()
             table.reload('testReload', {
                 url: '/department/findExample',
-                // ,methods:"post"
-                // request: {
-                //     pageName: 'page', //页码的参数名称，默认：page
-                //     limitName: 'limit' //每页数据量的参数名，默认：limit
-                // },
                 where: {
                     name: inputVal
                 },

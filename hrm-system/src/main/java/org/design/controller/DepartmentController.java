@@ -1,15 +1,12 @@
 package org.design.controller;
 
 import org.design.model.Department;
-import org.design.model.Employee;
 import org.design.service.DepartmentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,11 +17,16 @@ public class DepartmentController {
     @Resource
     private DepartmentService departmentService;
 
+    @RequestMapping("/savePage")
+    public String savePage() {
+        return "department_save";
+    }
+
     @RequestMapping("/save")
     @ResponseBody
     public String save(@RequestBody Department department) {
         departmentService.save(department);
-        return "新增数据成功";
+        return "success";
     }
 
     /**
@@ -37,30 +39,37 @@ public class DepartmentController {
     public String delete(@RequestBody Map<String, Object> data) {
         Integer id = (Integer) data.get("id");
         departmentService.delete(id);
-        return "删除数据成功";
+        return "success";
     }
 
+    @RequestMapping("/batchDelete")
+    @ResponseBody
+    public String batchDelete(@RequestBody List<Integer> idList) {
+        for (Integer id : idList) {
+            System.out.println(id);
+            departmentService.delete(id);
+        }
+        return "success";
+    }
 
-    @RequestMapping("/check/{id}")
+    @RequestMapping("/updatePage/{id}")
     public String check(@PathVariable Integer id, Model model) {
         System.out.println(id);
         Department department = departmentService.get(id);
         model.addAttribute("department", department);
-        return "view";
+        return "department_update";
     }
 
     @RequestMapping("/update")
-    public String update(Integer id, String name, String remark) {
-
-        Department department = new Department();
-        department.setID(id);
-        department.setName(name);
-        department.setRemark(remark);
+    @ResponseBody
+    public String update(@RequestBody Department department) {
+        System.out.println(department);
         departmentService.update(department);
-        return "redirect:/index";
+        return "success";
     }
 
     @RequestMapping("/get")
+    @ResponseBody
     public Department get(@RequestBody Map<String, Object> data) {
 
         Integer id = (Integer) data.get("id");
@@ -85,8 +94,7 @@ public class DepartmentController {
     public Map<String, Object> findExample(String name, Integer page, Integer limit) {
         Department department = new Department();
         department.setName(name);
-        Map<String, Object> data = departmentService.findExample(department, page, limit);
-        return data;
+        return departmentService.findExample(department, page, limit);
     }
 
 }

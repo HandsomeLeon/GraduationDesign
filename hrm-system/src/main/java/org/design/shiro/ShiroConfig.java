@@ -3,7 +3,6 @@ package org.design.shiro;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -12,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.Filter;
 
 @Configuration
 public class ShiroConfig {
@@ -34,6 +34,7 @@ public class ShiroConfig {
         CustomizeRealm customizeRealm = new CustomizeRealm();
         return customizeRealm;
     }
+
 
     //权限管理，配置主要是Realm的管理认证
     @Bean
@@ -58,6 +59,11 @@ public class ShiroConfig {
         //对所有用户认证
         map.put("/**", "authc");//authc表示需要认证才可以访问,anon表示可以匿名访问
 
+        Map<String, Filter> filterMap = new HashMap<>();
+        filterMap.put("authc", new CustomizeFilter());
+        // 设置自定义Filter
+        shiroFilterFactoryBean.setFilters(filterMap);
+
         //登录
         shiroFilterFactoryBean.setLoginUrl("/login");
         //首页
@@ -66,6 +72,8 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setUnauthorizedUrl("/error");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
+
+
         return shiroFilterFactoryBean;
     }
 
@@ -76,11 +84,16 @@ public class ShiroConfig {
         return authorizationAttributeSourceAdvisor;
     }
 
-//    @Bean
-//    public FormAuthenticationFilter formAuthenticationFilter() {
-//        FormAuthenticationFilter filter = new FormAuthenticationFilter();
-//        filter.setUsernameParam("username");
-//        filter.setPasswordParam("password");
-//        return filter;
-//    }
+    /**
+     * 自定义Filter 重定向到index
+     * @return
+     */
+    /*@Bean
+    public CustomizeFilter customizeFilter() {
+        CustomizeFilter customizeFilter = new CustomizeFilter();
+        customizeFilter.setUsernameParam("username");
+        customizeFilter.setPasswordParam("password");
+        return customizeFilter;
+    }*/
+
 }

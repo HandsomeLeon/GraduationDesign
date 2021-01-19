@@ -1,10 +1,10 @@
 package org.design.model;
 
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Reimbursement {
-    private Long id;
+    private Integer id;
 
     private Double money;
 
@@ -12,17 +12,17 @@ public class Reimbursement {
 
     private String remark;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
     private Integer state;
 
     private Long userId;
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -50,11 +50,11 @@ public class Reimbursement {
 		this.remark = remark;
 	}
 
-	public Date getCreateTime() {
+	public LocalDateTime getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(LocalDateTime createTime) {
 		this.createTime = createTime;
 	}
 
@@ -74,4 +74,16 @@ public class Reimbursement {
 		this.userId = userId;
 	}
 
+	@Override
+	public String toString() {
+		return "Reimbursement{" +
+				"id=" + id +
+				", money=" + money +
+				", title='" + title + '\'' +
+				", remark='" + remark + '\'' +
+				", createTime=" + createTime +
+				", state=" + state +
+				", userId=" + userId +
+				'}';
+	}
 }

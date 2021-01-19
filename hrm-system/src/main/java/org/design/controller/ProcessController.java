@@ -27,13 +27,25 @@ public class ProcessController {
         return "process_save";
     }
 
+    /**
+     * 部署流程
+     * @param file
+     * @param processName
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("/save")
     @ResponseBody
-    public String save(MultipartFile file, String processName) {
+    public String save(MultipartFile file, String processName) throws IOException {
 
-        if (file.isEmpty()) {
-            throw new ServiceException("文件不能为空");
-        }
+        processService.saveProcess(file.getInputStream(), processName);
         return "success";
     }
+
+    @RequestMapping("/find")
+    public String find() {
+        return "process_list";
+    }
+
+
 }

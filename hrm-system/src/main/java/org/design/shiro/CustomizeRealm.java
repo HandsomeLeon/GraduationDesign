@@ -51,9 +51,6 @@ public class CustomizeRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 
         System.out.println("正在进行验证");
-        if (authenticationToken.getPrincipal() == null) {
-            return null;
-        }
 
         String username = authenticationToken.getPrincipal().toString();
         Employee employee = employeeService.findByUsername(username);

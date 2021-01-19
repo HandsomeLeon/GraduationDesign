@@ -2,7 +2,7 @@ package org.design.model;
 
 import java.time.LocalDateTime;
 
-public class AbsenceForm {
+public class Absence {
 
     private Integer id;
 

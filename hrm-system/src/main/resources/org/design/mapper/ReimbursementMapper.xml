@@ -19,4 +19,12 @@
             SELECT LAST_INSERT_ID();
         </selectKey>
     </insert>
+
+    <delete id="delete" parameterType="Integer">
+        delete from reimbursement where id = #{id};
+    </delete>
+
+    <select id="findAll" resultMap="BaseMap">
+        select * from reimbursement
+    </select>
 </mapper>

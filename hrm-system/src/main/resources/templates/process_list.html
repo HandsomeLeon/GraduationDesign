@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>报销单列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../static/css/layui.css" media="all">
+    <script src="../static/js/jquery.min.js"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+
+<body>
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 40px;">
+    <legend>部署信息管理列表</legend>
+</fieldset>
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="barDemo">
+    <!-- <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon"></i>查看审核记录</a> -->
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon"></i>删除流程定义</a>
+</script>
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 40px;">
+    <legend>流程定义信息列表</legend>
+</fieldset>
+
+<table class="layui-hide" id="define" lay-filter="define"></table>
+
+<script type="text/html" id="barDefine">
+    <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon"></i>查看流程定义图</a>
+    <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon"></i>删除</a> -->
+</script>
+
+<script src="../static/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+
+        table.render({
+            elem: '#test',
+            url: '/process/findDeploymentList',
+            cols: [
+                [{
+                    field: 'id',
+                    title: 'ID',
+                    width: 255
+                }, {
+                    field: 'name',
+                    title: '流程名称',
+                    width: 800
+                }, {
+                    field: 'deploymentTime',
+                    title: '部署时间',
+                    width: 490
+                }, {
+                    fixed: 'right',
+                    title: '操作',
+                    toolbar: '#barDemo',
+                    width: 150
+                }]
+            ],
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                    var map = {
+                        "id": data.id
+                    };
+                    $.ajax({
+                        type: 'post',
+                        url: '/process/delete',
+                        contentType: 'application/json',
+                        data: JSON.stringify(map),
+                        success: function (response) {
+                            if (response === 'success') {
+                                layer.msg('删除成功');
+                            }
+                        },
+                        error: function () {
+                            layer.msg("操作失败");
+                        }
+                    })
+                });
+            }
+        });
+		
+		table.render({
+		    elem: '#define',
+		    url: '/process/findDefinitionList',
+		    cols: [
+		        [{
+		            field: 'id',
+		            title: 'ID',
+		            width: 255
+		        }, {
+		            field: 'name',
+		            title: '名称',
+		            width: 200
+		        }, {
+		            field: 'key',
+		            title: '流程定义KEY',
+		            width: 200
+		        }, {
+		            field: 'version',
+		            title: '流程定义版本',
+		            width: 190
+		        }, {
+		            field: 'resourceName',
+		            title: '流程定义文件名称',
+		            width: 300
+		        }, {
+		            field: 'diagramResourceName',
+		            title: '流程定义图片名称',
+		            width: 300
+		        }, {
+		            field: 'deploymentId',
+		            title: '部署ID',
+		            width: 95
+		        }, {
+		            fixed: 'right',
+		            title: '操作',
+		            toolbar: '#barDefine',
+		            width: 150
+		        }]
+		    ]
+		});
+		
+		//监听行工具事件
+		table.on('tool(define)', function (obj) {
+		    var data = obj.data;
+		    //console.log(obj)
+		    if (obj.event === 'edit') {
+		        layer.open({
+		            type: 2,
+		            title: '流程定义图',
+		            shadeClose: true,
+		            shade: 0.7,
+		            area: ['775px', '70%'],
+		            content: ['/process/findProcessImage?id=' + data.deploymentId + '&imageName=' + data.diagramResourceName, 'no'] //iframe的url, no不显示滚动条
+		        });
+		    }
+		});
+    });
+</script>
+
+</body>
+
+</html>

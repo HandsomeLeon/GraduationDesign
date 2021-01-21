@@ -1,5 +1,7 @@
 package org.design.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.design.mapper.ReimbursementMapper;
 import org.design.model.Reimbursement;
 import org.design.service.ReimbursementService;
@@ -7,6 +9,8 @@ import org.design.utils.ServiceException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -24,8 +28,11 @@ public class ReimbursementServiceImpl implements ReimbursementService {
     }
 
     @Override
-    public void delete(Integer integer) {
-
+    public void delete(Integer id) {
+        Integer result = reimbursementMapper.delete(id);
+        if (result <= 0) {
+            throw new ServiceException("操作数据库失败");
+        }
     }
 
     @Override
@@ -40,7 +47,20 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
     @Override
     public Map<String, Object> findAll(Integer page, Integer limit) {
-        return null;
+
+        PageHelper.startPage(page, limit);
+        List<Reimbursement> reimbursementList = reimbursementMapper.findAll();
+        if (reimbursementList == null) {
+            throw new ServiceException("获取数据失败");
+        }
+        PageInfo<Reimbursement> pageInfo = new PageInfo<>(reimbursementList);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", 0);
+        data.put("msg", "");
+        data.put("count", pageInfo.getTotal());
+        data.put("data", reimbursementList);
+        return data;
     }
 
     @Override

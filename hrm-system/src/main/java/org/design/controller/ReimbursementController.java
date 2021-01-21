@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/reimbursement")
@@ -41,6 +43,36 @@ public class ReimbursementController {
 
         processService.pushProcess(reimbursement.getId(), employee.getUsername());
 
+        return "success";
+    }
+
+    @RequestMapping("/find")
+    public String findReimbursementList() {
+        return "reimbursement_list";
+    }
+
+    @RequestMapping("/findAll")
+    @ResponseBody
+    public Map<String, Object> findAll(Integer page, Integer limit) {
+        return reimbursementService.findAll(page, limit);
+    }
+
+    @RequestMapping("/delete")
+    @ResponseBody
+    public String delete(@RequestBody Map<String, Object> data) {
+
+        Integer id = (Integer) data.get("id");
+        reimbursementService.delete(id);
+        return "success";
+    }
+
+    @RequestMapping("/batchDelete")
+    @ResponseBody
+    public String batchDelete(@RequestBody List<Integer> idList) {
+        for (Integer id : idList) {
+            System.out.println(id);
+            reimbursementService.delete(id);
+        }
         return "success";
     }
 }

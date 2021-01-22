@@ -69,7 +69,7 @@ public class JobServiceImpl implements JobService {
         data.put("code", 0);
         data.put("msg", "");
         data.put("count", pageInfo.getTotal());
-        data.put("data", pageInfo.getList());
+        data.put("data", jobList);
         return data;
     }
 
@@ -89,7 +89,7 @@ public class JobServiceImpl implements JobService {
         data.put("code", 0);
         data.put("msg", "");
         data.put("count", pageInfo.getTotal());
-        data.put("data", pageInfo.getList());
+        data.put("data", jobList);
         return data;
     }
 }

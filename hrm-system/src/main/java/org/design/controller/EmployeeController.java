@@ -2,19 +2,22 @@ package org.design.controller;
 
 import org.design.model.Employee;
 import org.design.service.EmployeeService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.design.service.SystemService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/employee")
 public class EmployeeController {
 
     @Resource
     private EmployeeService employeeService;
+    @Resource
+    private SystemService systemService;
 
     @RequestMapping("/save")
     public String save(@RequestBody Employee employee) {
@@ -41,15 +44,30 @@ public class EmployeeController {
         return employeeService.get(id);
     }
 
+    @RequestMapping("/find")
+    public String find() {
+        return "employee_list";
+    }
+
     @RequestMapping("/findAll")
+    @ResponseBody
     public Map<String, Object> findAll(Integer page, Integer limit) {
         return employeeService.findAll(page, limit);
     }
 
     @RequestMapping("/findExample")
+    @ResponseBody
     public Map<String, Object> findExample(String username, Integer page, Integer limit) {
         Employee employee = new Employee();
         employee.setUsername(username);
         return employeeService.findExample(employee, page, limit);
+    }
+
+    @RequestMapping("/findRole/{roleId}")
+    public String findRole(@PathVariable Integer roleId, Model model) {
+
+        model.addAttribute("role", systemService.findRole(roleId));
+        System.out.println(systemService.findRole(roleId));
+        return "role_permission";
     }
 }

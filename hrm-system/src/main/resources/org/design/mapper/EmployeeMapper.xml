@@ -54,7 +54,7 @@
     </select>
 
     <select id="findExample" parameterType="Employee" resultMap="BaseMap">
-        select * from employee where username like concat('%', #{username}, '%');
+        select * from employee where username like concat('%', #{username}, '%')
     </select>
 
     <select id="findByUsername" parameterType="String" resultMap="BaseMap">

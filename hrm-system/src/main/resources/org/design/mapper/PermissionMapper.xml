@@ -19,23 +19,6 @@
         <result column="name" property="name"/>
     </resultMap>
 
-    <!--	<resultMap type="MenuTree" id="menuAndPermissionResultMap">-->
-
-    <!--		<id column="id" property="id"/>-->
-    <!--		<result column="name" property="name"/>-->
-    <!--		<collection property="children" select="getSubMenuAndPermissions" column="id">-->
-    <!--			<id column="id" property="id"/>-->
-    <!--			<result column="name" property="name"/>-->
-    <!--			<result column="type" property="type" />-->
-    <!--			<result column="url" property="url" />-->
-    <!--			<result column="permission_code" property="permissionCode"/>-->
-    <!--			<result column="parent_id" property="parentId"/>-->
-    <!--			<result column="parent_ids" property="parentIds" />-->
-    <!--			<result column="sort_string" property="sortString" />-->
-    <!--			<result column="available" property="available"/>-->
-    <!--		</collection>-->
-    <!--	</resultMap>-->
-
     <select id="findByUsername" parameterType="String" resultMap="BaseMap">
         SELECT *
 		FROM sys_permission

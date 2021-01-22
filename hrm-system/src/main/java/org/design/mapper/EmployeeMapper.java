@@ -19,4 +19,5 @@ public interface EmployeeMapper {
     List<Employee> findExample(Employee employee);
 
     Employee findByUsername(String username);
+
 }

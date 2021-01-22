@@ -9,7 +9,7 @@
     </resultMap>
 
     <select id="findPermissionListByRoleId" parameterType="Integer" resultMap="BaseMap">
-        select * from sys_role_permission where sys_role_id = #{sysRoleId};
+        select * from sys_role_permission where sys_role_id = #{sysRoleId} order by sys_permission_id asc;
     </select>
 
 </mapper>

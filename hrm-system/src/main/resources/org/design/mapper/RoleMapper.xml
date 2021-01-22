@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.design.mapper.RoleMapper">
+
+    <resultMap id="BaseMap" type="Role">
+        <id column="id" property="id" />
+        <result column="name" property="name"/>
+        <result column="available" property="available"/>
+        
+        <collection property="permissionList" ofType="Permission">
+            <id column="permission_id" property="id"/>
+            <result column="permission_name" property="name"/>
+        </collection>
+    </resultMap>
+    
+    <select id="get" parameterType="Integer" resultMap="BaseMap">
+        select r.*, p.id as permission_id, p.name as permission_name from sys_role r, sys_permission p, sys_role_permission rp
+        where r.id = rp.sys_role_id and p.id = rp.sys_permission_id and r.id = #{id};
+    </select>
+
+</mapper>

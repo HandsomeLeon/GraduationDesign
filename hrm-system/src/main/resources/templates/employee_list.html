@@ -34,7 +34,8 @@
 </script>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon"></i>查看权限</a>
+    <a class="layui-btn layui-btn-xs" lay-event="find">&nbsp;&nbsp;查看权限&nbsp;&nbsp;</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">&nbsp;&nbsp;编辑用户&nbsp;&nbsp;</a>
 </script>
 
 <script src="../static/layui.js" charset="utf-8"></script>
@@ -51,6 +52,26 @@
             toolbar: '#toolbarDemo', //开启头部工具栏，并为其绑定左侧模板
             defaultToolbar: [],
             title: '用户数据表',
+            parseData: function (result) {
+                var data = result.data;
+
+                var tempData = data;
+
+                for (let i = 0; i < data.length; i++) {
+                    data[i].role = data[i].role.name;
+                }
+                for (let i = 0; i < data.length; i++) {
+                    var managerId = tempData[i].managerId;
+                    if (managerId === 0) {
+                        data[i].managerId = '最高级主管';
+                    }
+                    for (let j = 0; j < tempData.length; j++) {
+                        if (managerId === tempData[j].id) {
+                            data[i].managerId = tempData[j].username;
+                        }
+                    }
+                }
+            },
             cols: [
                 [{
                     field: 'id',
@@ -59,7 +80,11 @@
                 }, {
                     field: 'username',
                     title: '账号',
-                    width: 200
+                    width: 150
+                }, {
+                    field: 'role',
+                    title: '角色',
+                    width: 130
                 }, {
                     field: 'gender',
                     title: '性别',
@@ -67,15 +92,15 @@
                 }, {
                     field: 'address',
                     title: '地址',
-                    width: 400
+                    width: 370
                 }, {
                     field: 'phone',
                     title: '联系电话',
-                    width: 250
+                    width: 180
                 }, {
-                    field: 'birthday',
-                    title: '出生日期',
-                    width: 250
+                    field: 'managerId',
+                    title: '上级主管',
+                    width: 200
                 }, {
                     field: 'createTime',
                     title: '创建时间',
@@ -84,13 +109,13 @@
                     fixed: 'right',
                     title: '操作',
                     toolbar: '#barDemo',
-                    width: 150
+                    width: 200
                 }]
             ],
             id: 'testReload',
             page: true,
-            limit: 5,
-            limits: [5, 10, 20]
+            limit: 15,
+            limits: [15, 20]
         });
 
         //头工具栏事件
@@ -109,25 +134,31 @@
                             location.reload();                  //窗口销毁时刷新主页面数据
                         }
                     });
-                    break;
+                break;
             }
         });
 
         //监听行工具事件
         table.on('tool(test)', function (obj) {
             var data = obj.data;
-            //console.log(data);
-            if (obj.event === 'edit') {
+
+            if (obj.event === 'find') {
+                layer.open({
+                    type: 2,
+                    title: '查看权限',
+                    shadeClose: true,
+                    shade: 0.7,
+                    area: ['720px', '60%'],
+                    content: ['/employee/findRole/' + data.role.id, 'no'] //iframe的url, no不显示滚动条
+                });
+            } else if (obj.event === 'edit') {
                 layer.open({
                     type: 2,
                     title: '编辑用户',
                     shadeClose: true,
                     shade: 0.7,
                     area: ['720px', '60%'],
-                    content: ['/employee/findRole/' + data.role.id, 'no'], //iframe的url, no不显示滚动条
-                    end: function () {                   //请求回调，窗口销毁时执行
-                        location.reload();                  //窗口销毁时刷新主页面数据
-                    }
+                    content: ['/employee/findRole/' + data.role.id, 'no'] //iframe的url, no不显示滚动条
                 });
             }
         });

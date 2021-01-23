@@ -10,8 +10,6 @@ public interface SystemService {
 
     List<Permission> findPermissionListByUsername(String username);
 
-    //List<Permission> findPermissionListByRoleId(Integer roleId);
-
     /**
      * 查找一级菜单
      * @param username  用户名
@@ -20,4 +18,6 @@ public interface SystemService {
     List<MenuTree> findMenuTreeList(String username);
 
     Role findRole(Integer id);
+
+    List<Role> findRoleList();
 }

@@ -68,7 +68,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         data.put("msg", "");
         data.put("count", pageInfo.getTotal());
         data.put("data", employeeList);
-
         return data;
     }
 

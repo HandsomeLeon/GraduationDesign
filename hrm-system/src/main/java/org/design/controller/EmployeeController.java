@@ -1,6 +1,8 @@
 package org.design.controller;
 
 import org.design.model.Employee;
+import org.design.model.Permission;
+import org.design.model.Role;
 import org.design.service.EmployeeService;
 import org.design.service.SystemService;
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -45,7 +49,8 @@ public class EmployeeController {
     }
 
     @RequestMapping("/find")
-    public String find() {
+    public String find(Model model) {
+        model.addAttribute("roleList", systemService.findRoleList());
         return "employee_list";
     }
 
@@ -66,8 +71,14 @@ public class EmployeeController {
     @RequestMapping("/findRole/{roleId}")
     public String findRole(@PathVariable Integer roleId, Model model) {
 
-        model.addAttribute("role", systemService.findRole(roleId));
-        System.out.println(systemService.findRole(roleId));
+        Role role = systemService.findRole(roleId);
+        model.addAttribute("role", role);
+        List<Permission> permissionList = role.getPermissionList();
+        List<String> permissionStrList = new ArrayList<>();
+        for (Permission permission : permissionList) {
+            permissionStrList.add(permission.getName() + " [" + permission.getType() + "]");
+        }
+        model.addAttribute("permissionList", permissionStrList);
         return "role_permission";
     }
 }

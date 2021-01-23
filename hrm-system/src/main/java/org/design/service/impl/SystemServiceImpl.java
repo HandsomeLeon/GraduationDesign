@@ -57,4 +57,13 @@ public class SystemServiceImpl implements SystemService {
         return role;
     }
 
+    @Override
+    public List<Role> findRoleList() {
+        List<Role> roleList = roleMapper.findAll();
+        if (roleList == null) {
+            throw new ServiceException("获取数据失败");
+        }
+        return roleList;
+    }
+
 }

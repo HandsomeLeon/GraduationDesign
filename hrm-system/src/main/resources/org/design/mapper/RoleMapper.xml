@@ -10,12 +10,17 @@
         <collection property="permissionList" ofType="Permission">
             <id column="permission_id" property="id"/>
             <result column="permission_name" property="name"/>
+            <result column="type" property="type"/>
         </collection>
     </resultMap>
     
     <select id="get" parameterType="Integer" resultMap="BaseMap">
-        select r.*, p.id as permission_id, p.name as permission_name from sys_role r, sys_permission p, sys_role_permission rp
-        where r.id = rp.sys_role_id and p.id = rp.sys_permission_id and r.id = #{id};
+        select r.*, p.id as permission_id, p.name as permission_name, p.type from sys_role r, sys_permission p, sys_role_permission rp
+        where r.id = rp.sys_role_id and p.id = rp.sys_permission_id and r.id = #{id} order by permission_id asc;
+    </select>
+
+    <select id="findAll" resultType="Role">
+        select * from sys_role;
     </select>
 
 </mapper>

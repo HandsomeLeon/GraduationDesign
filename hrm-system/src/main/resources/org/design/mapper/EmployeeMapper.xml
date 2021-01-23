@@ -16,10 +16,12 @@
             <id column="id" property="id" />
         </association>
         <association property="job" javaType="Job">
-            <id column="id" property="id" />
+            <id column="role_id" property="id" />
         </association>
         <association property="role"  javaType="Role">
             <id column="id" property="id" />
+            <result column="name" property="name"/>
+            <result column="available" property="available"/>
         </association>
     </resultMap>
 
@@ -50,11 +52,11 @@
     </select>
 
     <select id="findAll" resultMap="BaseMap">
-        select * from employee
+        select e.*, r.id as sys_role_id, r.name, r.available from employee e, sys_role r where e.role_id = r.id
     </select>
 
     <select id="findExample" parameterType="Employee" resultMap="BaseMap">
-        select * from employee where username like concat('%', #{username}, '%')
+        select e.*, r.id as sys_role_id, r.name, r.available from employee e, sys_role r where e.role_id = r.id and e.username like concat('%', #{username}, '%')
     </select>
 
     <select id="findByUsername" parameterType="String" resultMap="BaseMap">

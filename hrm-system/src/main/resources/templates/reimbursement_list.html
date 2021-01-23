@@ -18,14 +18,6 @@
     <legend>报销单列表</legend>
 </fieldset>
 
-<!--<div class="demoTable" style="margin-top: 10px; margin-left: 20px;">
-    搜索报销单：
-    <div class="layui-inline">
-        <input type="text" name="name" id="keyword" placeholder="报销单名称" class="layui-input">
-    </div>
-    <button type="submit" class="layui-btn" id="search">搜索</button>
-</div>-->
-
 <table class="layui-hide" id="test" lay-filter="test"></table>
 
 <script type="text/html" id="toolbarDemo">
@@ -63,12 +55,12 @@
                         data[i].state = '审核完成';
                     }
                 }
-                return {
+                /*return {
                     "code": result.code, //解析接口状态
                     "msg": result.msg, //解析提示文本
                     "count": result.count, //解析数据长度
                     "data": data  // 处理data中state数据
-                };
+                };*/
             },
             cols: [
                 [{

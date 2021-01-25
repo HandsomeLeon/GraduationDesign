@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>Layui</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" th:href="@{'/static/css/layui.css'}" media="all">
+</head>
+
+<body style="background-color: #fcfcfc">
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+	<legend>新建用户</legend>
+</fieldset>
+<div style="height: 350px; margin-left: 20px; margin-top: 20px; padding-left: 10px; padding-top: 20px;">
+
+	<form class="layui-form layui-form-pane" action="/employee/save" method="post">
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">用户名</label>
+			<div class="layui-input-inline">
+				<input type="text" name="username" lay-verify="username" placeholder="请输入" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">密码</label>
+			<div class="layui-input-inline">
+				<input type="password" name="password" lay-verify="password" placeholder="请输入密码" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">确认密码</label>
+			<div class="layui-input-inline">
+				<input type="password" lay-verify="confirmPassword" placeholder="请输入密码" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">地址</label>
+			<div class="layui-input-inline">
+				<input type="text" name="address" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">联系电话</label>
+			<div class="layui-input-inline">
+				<input type="text" name="phone" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">性别</label>
+			<div class="layui-input-inline">
+				<input type="radio" name="gender" value="男" title="男" checked="">
+				<input type="radio" name="gender" value="女" title="女">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline">
+				<label class="layui-form-label">生日</label>
+				<div class="layui-input-inline">
+					<input type="text" name="birthday" id="date" lay-verify="required" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline">
+				<label class="layui-form-label">部门</label>
+				<div class="layui-input-inline">
+					<select name="department" lay-filter="department" data-value={{d.departmentName}}>
+						<option th:each="department : ${departmentList}" th:value="${department.id}" th:text="${department.name}"></option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline">
+				<label class="layui-form-label">职位</label>
+				<div class="layui-input-inline">
+					<select name="job" lay-filter="job" data-value={{d.jobName}}>
+						<option th:each="job : ${jobList}" th:value="${job.id}" th:text="${job.name}"></option>
+
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline">
+				<label class="layui-form-label">角色</label>
+				<div class="layui-input-inline">
+					<select name="role" lay-filter="role" data-value={{d.roleName}}>
+						<option th:each="role : ${roleList}" th:value="${role.id}" th:text="${role.name}"></option>
+
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline">
+				<label class="layui-form-label">上级主管</label>
+				<div class="layui-input-inline">
+					<select name="managerId" lay-filter="managerId" data-value={{d.departmentName}}>
+						<option value="1">1</option>
+						<option value="1">1</option>
+						<option value="1">1</option>
+						<option value="1">1</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-form-item" style="margin-left: 155px;">
+			<button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="save">确认</button>
+			<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+		</div>
+	</form>
+</div>
+
+<script th:src="@{'/static/layui.js'}" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+	layui.use(['form', 'layedit', 'laydate'], function() {
+		var form = layui.form,
+				layer = layui.layer,
+				laydate = layui.laydate;
+		var $ = layui.jquery;
+		var pass;
+		var verify = new RegExp(/^[\S]{6,12}$/);
+
+		//日期
+		laydate.render({
+			elem: '#date'
+		});
+
+		//自定义验证规则
+		form.verify({
+			username: function(value) {
+				if(value.length < 3) {
+					return '用户名至少得3个字符';
+				}
+			},
+			password: function(value) {
+				if (!verify.test(value)) {
+					return '密码必须6到12位，且不能出现空格';
+				}
+				pass = value;
+			},
+			confirmPassword: function(value) {
+				if (value != pass) {
+					return '输入的密码请保持一致';
+				}
+			}
+		});
+
+		//监听提交
+		form.on('submit(save)', function(data) {
+			var param = data.field;
+			var json = {
+				'username': param.username,
+				'password': param.password,
+				'address': param.address,
+				'phone': param.phone,
+				'gender': param.gender,
+				'birthday': param.birthday + ' 00:00:00',
+				'department': {
+					'id': param.department
+				},
+				'job': {
+					'id': param.job
+				},
+				'role': {
+					'id': param.role
+				},
+				'managerId': param.managerId
+			};
+			console.log(JSON.stringify(json));
+
+			$.ajax({
+				type: "POST",
+				url: "/employee/save",//url
+				contentType: "application/json",
+				data: JSON.stringify(json),  //表单数据
+				success: function (result) {
+					if (result === "success") {
+						layer.msg('新增用户成功，1秒后自动关闭该窗口');
+						//延迟1秒执行，目的是让用户看到提示
+						setTimeout(function () {
+							//1、先得到当前iframe层（弹出层）的索引  ///2、提交成功关闭弹出层窗口
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}, 1000);
+					}
+				},
+				error: function () {
+					layer.msg('操作失败');
+				}
+			});
+			return false;
+		});
+	});
+</script>
+</body>
+
+</html>

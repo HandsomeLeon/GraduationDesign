@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface DepartmentService extends BaseService<Department, Integer> {
 
+    List<Department> findDepartmentList();
 }

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.design.mapper.EmployeeMapper">
+
+    <!--<parameterMap id="ParamMap" type="Employee">
+        <parameter property="department" javaType="Department" />
+        <parameter property="job" javaType="Job" />
+        <parameter property="role" javaType="Role" />
+    </parameterMap>-->
+
     <resultMap id="BaseMap" type="Employee">
         <id property="id" column="id" />
         <result property="username" column="username" />
@@ -14,9 +21,13 @@
         <result property="managerId" column="manager_id" />
         <association property="department" javaType="Department">
             <id column="id" property="id" />
+            <result column="name" property="name"/>
+            <result column="remark" property="remark"/>
         </association>
         <association property="job" javaType="Job">
-            <id column="role_id" property="id" />
+            <id column="id" property="id" />
+            <result column="name" property="name"/>
+            <result column="remark" property="remark"/>
         </association>
         <association property="role"  javaType="Role">
             <id column="id" property="id" />
@@ -26,7 +37,7 @@
     </resultMap>
 
     <insert id="save" parameterType="Employee">
-        insert into employee values(null, #{username}, #{password}, #{departmentId}, #{jobId}, #{roleId}
+        insert into employee values(null, #{username}, #{password}, #{department.id}, #{job.id}, #{role.id},
         #{managerId}, #{address}, #{phone}, #{gender}, #{birthday}, #{createTime});
     </insert>
 
@@ -35,15 +46,7 @@
     </delete>
 
     <update id="update" parameterType="Employee">
-        update employee
-        <set>
-            <if test="address != null">
-                address = #{address},
-            </if>
-            <if test="phone != null">
-                phone = #{phone}
-            </if>
-        </set>
+        update employee set username = #{username}, password = {}
         where id = #{id};
     </update>
 
@@ -62,4 +65,8 @@
     <select id="findByUsername" parameterType="String" resultMap="BaseMap">
         select * from employee where username = #{username};
     </select>
+
+    <update id="updateRole" parameterType="Integer">
+        update employee set role_id = #{roleId} where id = #{id};
+    </update>
 </mapper>

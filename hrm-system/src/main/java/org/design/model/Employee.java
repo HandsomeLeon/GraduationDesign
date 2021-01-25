@@ -1,10 +1,11 @@
 package org.design.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDateTime;
 
-@JsonIgnoreProperties(value = {"password"})
+@JsonIgnoreProperties(value = {"password"}, allowSetters = true)
 public class Employee {
 
     /**
@@ -61,6 +62,7 @@ public class Employee {
     /**
      * 出生日期 （必需）
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime birthday;
 
     /**

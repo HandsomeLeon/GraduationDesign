@@ -1,5 +1,6 @@
 package org.design.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.design.model.Employee;
 
 import java.util.List;
@@ -19,5 +20,7 @@ public interface EmployeeMapper {
     List<Employee> findExample(Employee employee);
 
     Employee findByUsername(String username);
+
+    Integer updateRole(Integer id, @Param("roleId") Integer roleId);
 
 }

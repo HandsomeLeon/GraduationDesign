@@ -56,6 +56,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Map<String, Object> findAll(Integer page, Integer limit) {
 
+        List<Employee> allEmployeeList = employeeMapper.findAll();
+
         PageHelper.startPage(page, limit);
         List<Employee> employeeList = employeeMapper.findAll();
         if (employeeList == null) {
@@ -68,11 +70,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         data.put("msg", "");
         data.put("count", pageInfo.getTotal());
         data.put("data", employeeList);
+        data.put("employeeList", allEmployeeList);
         return data;
     }
 
     @Override
     public Map<String, Object> findExample(Employee model, Integer page, Integer limit) {
+
+        List<Employee> allEmployeeList = employeeMapper.findAll();
 
         PageHelper.startPage(page, limit);
         List<Employee> employeeList = employeeMapper.findExample(model);
@@ -87,6 +92,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         data.put("msg", "");
         data.put("count", pageInfo.getTotal());
         data.put("data", employeeList);
+        data.put("employeeList", allEmployeeList);
         return data;
     }
 
@@ -98,5 +104,13 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new ServiceException("获取数据失败");
         }
         return employee;
+    }
+
+    @Override
+    public void updateRole(Integer id, Integer roleId) {
+        Integer result = employeeMapper.updateRole(id, roleId);
+        if (result <= 0) {
+            throw new ServiceException("操作数据库失败");
+        }
     }
 }

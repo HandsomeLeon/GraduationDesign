@@ -92,4 +92,14 @@ public class JobServiceImpl implements JobService {
         data.put("data", jobList);
         return data;
     }
+
+    @Override
+    public List<Job> findJobList() {
+
+        List<Job> jobList = jobMapper.findAll();
+        if (jobList == null) {
+            throw new ServiceException("获取数据失败");
+        }
+        return jobList;
+    }
 }

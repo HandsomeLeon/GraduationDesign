@@ -23,24 +23,24 @@
 			
 			<form class="layui-form layui-form-pane" action="/login" method="post" style="float: left; width: 340px; margin-left: 50px; margin-top: 22px;">
 				<div class="layui-form-item">
-					<label class="layui-form-label" style="width: 80px;">用户名</label>
+					<label class="layui-form-label" style="width: 100px;">用户名&nbsp;<i class="layui-icon">&#xe66f;</i> </label>
 					<div class="layui-input-inline">
 						<input type="text" style="width: 220px;" name="username" lay-verify="required" placeholder="用户名" autocomplete="off" class="layui-input">
 					</div><br /><br /><br />
 					
-					<label class="layui-form-label" style="width: 80px; margin-top: 7px;">密&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+					<label class="layui-form-label" style="width: 100px; margin-top: 7px;">密&nbsp;&nbsp;&nbsp;&nbsp;码&nbsp;<i class="layui-icon">&#xe673;</i></label>
 					<div class="layui-input-inline" style=" margin-top: 7px;">
 						<input type="password" style="width: 220px;" name="password" lay-verify="required" placeholder="密码" autocomplete="off" class="layui-input">
 					</div><br /><br /><br />
 					
-					<label class="layui-form-label" style="width: 80px; margin-top: 14px;">验证码</label>
+					<label class="layui-form-label" style="width: 100px; margin-top: 14px;">验证码&nbsp;<i class="layui-icon">&#xe679;</i></label>
 					<div class="layui-input-inline" style=" margin-top: 14px;">
 						<input type="text" style="width: 100px; float: left;" name="" lay-verify="" placeholder="验证码" autocomplete="off" class="layui-input">
 						<img src="../static/img/captcha.jpg" style="position: absolute; left: 120px; width: 100px; height: 38px;"/>
 					</div>
 				</div>
 				<div style="float: left; width: 80px; margin-top: 7px; margin-left: 130px;"><span th:text="${errorMsg}" style="color: orangered"></span></div>
-				<div class="layui-form-item" style="width: 80px; position: absolute; left: 1050px;">
+				<div class="layui-form-item" style="width: 80px; position: absolute; left: 1070px;">
 					<button class="layui-btn layui-btn-radius layui-btn-normal" lay-submit="">登录</button>
 				</div>
 			</form>

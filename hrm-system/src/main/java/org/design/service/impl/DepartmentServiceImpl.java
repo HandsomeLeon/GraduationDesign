@@ -91,4 +91,14 @@ public class DepartmentServiceImpl implements DepartmentService {
         data.put("data", departmentList);
         return data;
     }
+
+    @Override
+    public List<Department> findDepartmentList() {
+
+        List<Department> departmentList = departmentMapper.findAll();
+        if (departmentList == null) {
+            throw new ServiceException("获取数据失败");
+        }
+        return departmentList;
+    }
 }

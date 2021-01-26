@@ -134,7 +134,8 @@
         //日期
         laydate.render({
             elem: '#date',
-            format: 'yyyy-MM-dd HH:mm:ss'
+            format: 'yyyy-MM-dd HH:mm:ss',
+            show: true
         });
 
         //自定义验证规则
@@ -204,6 +205,7 @@
 
         //监听提交
         form.on('submit(save)', function (data) {
+            //laydate.render('date');
             var param = data.field;
             var json = {
                 'id': param.id,

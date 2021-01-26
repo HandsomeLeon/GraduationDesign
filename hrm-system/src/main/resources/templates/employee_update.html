@@ -12,60 +12,58 @@
 
 <body style="background-color: #fcfcfc">
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-    <legend>新建用户</legend>
+    <legend>编辑用户信息</legend>
 </fieldset>
 <div style="height: 350px; margin-left: 20px; margin-top: 20px; padding-left: 10px; padding-top: 20px;">
 
-    <form class="layui-form layui-form-pane" action="/employee/save" method="post">
-
+    <form class="layui-form layui-form-pane" action="/employee/update" method="post">
+        <input type="hidden" name="id" th:value="${employee.id}">
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-inline">
-                <input type="text" name="username" lay-verify="username" placeholder="请输入" autocomplete="off"
-                       class="layui-input">
+                <input type="text" name="username" th:value="${employee.username}" lay-verify="username" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">密码</label>
             <div class="layui-input-inline">
-                <input type="password" name="password" lay-verify="password" placeholder="请输入密码" autocomplete="off"
-                       class="layui-input">
+                <input type="password" name="password" th:value="${employee.password}" lay-verify="password" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">确认密码</label>
             <div class="layui-input-inline">
-                <input type="password" lay-verify="confirmPassword" placeholder="请输入密码" autocomplete="off"
-                       class="layui-input">
+                <input type="password" th:value="${employee.password}" lay-verify="confirmPassword" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">地址</label>
             <div class="layui-input-inline">
-                <input type="text" name="address" lay-verify="required" placeholder="请输入" autocomplete="off"
-                       class="layui-input">
+                <input type="text" name="address" th:value="${employee.address}" lay-verify="required" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">联系电话</label>
             <div class="layui-input-inline">
-                <input type="text" name="phone" lay-verify="required" placeholder="请输入" autocomplete="off"
-                       class="layui-input">
+                <input type="text" name="phone" th:value="${employee.phone}" lay-verify="required" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">性别</label>
-            <div class="layui-input-inline">
+            <div class="layui-input-inline" th:if="${employee.gender} == '男'">
                 <input type="radio" name="gender" value="男" title="男" checked="">
                 <input type="radio" name="gender" value="女" title="女">
+            </div>
+            <div class="layui-input-inline" th:if="${employee.gender} == '女'">
+                <input type="radio" name="gender" value="男" title="男">
+                <input type="radio" name="gender" value="女" title="女" checked="">
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">生日</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="birthday" id="date" lay-verify="required" autocomplete="off"
-                           class="layui-input">
+                    <input type="text" name="birthday" th:value="${employee.birthday}" id="date" lay-verify="required" class="layui-input">
                 </div>
             </div>
         </div>
@@ -73,9 +71,9 @@
             <div class="layui-inline">
                 <label class="layui-form-label">部门</label>
                 <div class="layui-input-inline">
-                    <select name="department" lay-filter="department" data-value={{d.departmentName}} lay-verify="required">
-                        <option th:each="department : ${departmentList}" th:value="${department.id}"
-                                th:text="${department.name}"></option>
+                    <select name="department" lay-filter="department" lay-verify="required">
+                        <option th:each="department : ${departmentList}" th:selected="${employee.department.id == department.id}"
+                                th:value="${department.id}" th:text="${department.name}" ></option>
                     </select>
                 </div>
             </div>
@@ -84,8 +82,9 @@
             <div class="layui-inline">
                 <label class="layui-form-label">职位</label>
                 <div class="layui-input-inline">
-                    <select name="job" lay-filter="job" data-value={{d.jobName}} lay-verify="required">
-                        <option th:each="job : ${jobList}" th:value="${job.id}" th:text="${job.name}"></option>
+                    <select name="job" lay-filter="job" lay-verify="required">
+                        <option th:each="job : ${jobList}" th:selected="${employee.job.id == job.id}"
+                                th:value="${job.id}" th:text="${job.name}"></option>
                     </select>
                 </div>
             </div>
@@ -94,9 +93,10 @@
             <div class="layui-inline">
                 <label class="layui-form-label">角色</label>
                 <div class="layui-input-inline">
-                    <select name="role" lay-filter="role" data-value={{d.roleName}} lay-verify="required">
+                    <select name="role" lay-filter="role" lay-verify="required">
                         <!--<option value="">请选择</option>-->
-                        <option th:each="role : ${roleList}" th:value="${role.id}" th:text="${role.name}"></option>
+                        <option th:each="role : ${roleList}" th:selected="${employee.role.id == role.id}"
+                                th:value="${role.id}" th:text="${role.name}"></option>
                     </select>
                 </div>
             </div>
@@ -105,8 +105,9 @@
             <div class="layui-inline">
                 <label class="layui-form-label">上级主管</label>
                 <div class="layui-input-inline">
-                    <select id="managerId" name="managerId" lay-filter="managerId" data-value={{data.username}}>
-                        <option value="0">默认</option>
+                    <select id="managerId" name="managerId" lay-filter="managerId">
+                        <option th:if="${manager} != null" th:value="${manager.id}" th:text="${manager.username}"></option>
+                        <option th:if="${manager} == null" value="0">默认</option>
                     </select>
                 </div>
             </div>
@@ -156,41 +157,48 @@
             }
         });
 
-        form.on('select(role)', function (data) {
-            //选择的select对象值；
-            var selectValue = data.value;
+        // 选择角色后 上级主管数据回调
+        layui.use(['form', 'layedit', 'laydate'], function () {
 
-            if (selectValue === "1" || selectValue === "6") {
-                $('#managerId').empty();
-                $('#managerId').append("<option value='0'>" + "默认" + "</option>");
-                form.render("select");
-                return false;
-            }
-            console.log(selectValue);
-            // json数据
-            var map = {
-                "roleId": selectValue
-            };
-            // 发送post请求
-            $.ajax({
-                type: 'post',
-                url: '/employee/findManager',
-                contentType: 'application/json',
-                data: JSON.stringify(map),
-                success: function (result) {
+            var form = layui.form;
+            var $ = layui.jquery;
+
+            form.on('select(role)', function (data) {
+                //选择的select对象值；
+                var selectValue = data.value;
+
+                if (selectValue === "1" || selectValue === "6") {
                     $('#managerId').empty();
-                    console.log(result.data);
-                    $.each(result.data, function (index, item) {
-                        $('#managerId').append("<option value=" + item.id + ">" + item.username + "</option>");
-                    });
+                    $('#managerId').append("<option value='0'>" + "默认" + "</option>");
                     form.render("select");
-                },
-                error: function () {
-                    layer.msg('获取上级主管失败');
-                    setTimeout(function () {
-                        location.reload();
-                    }, 1000);
+                    return false;
                 }
+                console.log(selectValue);
+                // json数据
+                var map = {
+                    "roleId": selectValue
+                };
+                // 发送post请求
+                $.ajax({
+                    type: 'post',
+                    url: '/employee/findManager',
+                    contentType: 'application/json',
+                    data: JSON.stringify(map),
+                    success: function (result) {
+                        $('#managerId').empty();
+                        console.log(result.data);
+                        $.each(result.data, function (index, item) {
+                            $('#managerId').append("<option value=" + item.id + ">" + item.username + "</option>");
+                        });
+                        form.render("select");
+                    },
+                    error: function () {
+                        layer.msg('获取上级主管失败');
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                });
             });
         });
 
@@ -198,6 +206,7 @@
         form.on('submit(save)', function (data) {
             var param = data.field;
             var json = {
+                'id': param.id,
                 'username': param.username,
                 'password': param.password,
                 'address': param.address,
@@ -219,12 +228,12 @@
 
             $.ajax({
                 type: "POST",
-                url: "/employee/save",//url
+                url: "/employee/update",//url
                 contentType: "application/json",
                 data: JSON.stringify(json),  //表单数据
                 success: function (result) {
                     if (result === "success") {
-                        layer.msg('新增用户成功，1秒后自动关闭该窗口');
+                        layer.msg('修改用户成功');
                         //延迟1秒执行，目的是让用户看到提示
                         setTimeout(function () {
                             //1、先得到当前iframe层（弹出层）的索引  ///2、提交成功关闭弹出层窗口
@@ -240,6 +249,9 @@
             return false;
         });
     });
+</script>
+<script>
+
 </script>
 </body>
 

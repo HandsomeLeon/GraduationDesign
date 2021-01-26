@@ -47,9 +47,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee get(Integer integer) {
         Employee employee = employeeMapper.get(integer);
-        if (employee == null) {
-            throw new ServiceException("获取数据失败");
-        }
         return employee;
     }
 
@@ -112,5 +109,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (result <= 0) {
             throw new ServiceException("操作数据库失败");
         }
+    }
+
+    @Override
+    public List<Employee> findManagerByRoleId(Integer roleId) {
+
+        if (roleId == 6) {
+
+        }
+        List<Employee> employeeList = employeeMapper.findManagerByRoleId(roleId);
+        if (employeeList == null) {
+            throw new ServiceException("获取数据失败");
+        }
+        return employeeList;
     }
 }

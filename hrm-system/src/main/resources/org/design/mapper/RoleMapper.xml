@@ -6,6 +6,7 @@
         <id column="id" property="id" />
         <result column="name" property="name"/>
         <result column="available" property="available"/>
+        <result column="superior" property="superior"/>
         
         <collection property="permissionList" ofType="Permission">
             <id column="permission_id" property="id"/>

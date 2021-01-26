@@ -8,6 +8,8 @@ public class Role {
     private String name;
 
     private String available;
+
+    private Integer superior;
     
     private List<Permission> permissionList;
 
@@ -41,6 +43,14 @@ public class Role {
 
 	public void setPermissionList(List<Permission> permissionList) {
 		this.permissionList = permissionList;
+	}
+
+	public Integer getSuperior() {
+		return superior;
+	}
+
+	public void setSuperior(Integer superior) {
+		this.superior = superior;
 	}
 
 	@Override

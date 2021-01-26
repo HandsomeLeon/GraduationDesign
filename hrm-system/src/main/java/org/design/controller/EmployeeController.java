@@ -1,6 +1,5 @@
 package org.design.controller;
 
-import javafx.scene.input.DataFormat;
 import org.design.model.Employee;
 import org.design.model.Permission;
 import org.design.model.Role;
@@ -13,13 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/employee")
@@ -58,6 +53,18 @@ public class EmployeeController {
         return "success";
     }
 
+    @RequestMapping("/updatePage/{id}")
+    public String updatePage(@PathVariable Integer id, Model model) {
+        Employee employee = employeeService.get(id);
+        Employee manager = employeeService.get(employee.getManagerId());
+        model.addAttribute("employee", employee);
+        model.addAttribute("manager", manager);
+        model.addAttribute("departmentList", departmentService.findDepartmentList());
+        model.addAttribute("jobList", jobService.findJobList());
+        model.addAttribute("roleList", systemService.findRoleList());
+        return "employee_update";
+    }
+
     @RequestMapping("/update")
     @ResponseBody
     public String update(@RequestBody Employee employee) {
@@ -65,11 +72,10 @@ public class EmployeeController {
         return "success";
     }
 
-    @RequestMapping("/get")
-    public Employee get(@RequestBody Map<String, Object> data) {
+    /*public Employee get(@RequestBody Map<String, Object> data) {
         Integer id = (Integer) data.get("id");
         return employeeService.get(id);
-    }
+    }*/
 
     @RequestMapping("/find")
     public String find(Model model) {
@@ -110,6 +116,18 @@ public class EmployeeController {
     public String updateRole(@RequestBody Map<String, Object> data) {
         employeeService.updateRole(Integer.parseInt(data.get("id").toString()), Integer.parseInt(data.get("roleId").toString()));
         return "success";
+    }
+
+    @RequestMapping("/findManager")
+    @ResponseBody
+    public Map<String, Object> findManager(@RequestBody Map<String, Object> param) {
+
+        Integer roleId = Integer.parseInt(param.get("roleId").toString());
+        System.out.println("角色ID：" + roleId);
+        List<Employee> employeeList = employeeService.findManagerByRoleId(roleId);
+        Map<String, Object> data = new HashMap<>();
+        data.put("data", employeeList);
+        return data;
     }
 
 }

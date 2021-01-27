@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 25/01/2021 19:17:53
+ Date: 27/01/2021 18:19:38
 */
 
 SET NAMES utf8mb4;
@@ -730,20 +730,20 @@ CREATE TABLE `employee`  (
   `birthday` datetime(0) NOT NULL,
   `create_time` datetime(0) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of employee
 -- ----------------------------
-INSERT INTO `employee` VALUES (1, 'danny', '123456', 5, 9, 1, 0, '广州市天河区棠东村', '13026762251', '男', '2021-01-04 15:14:25', '2021-01-04 15:14:25');
-INSERT INTO `employee` VALUES (2, 'jack', '123456', 3, 8, 2, 1, '广州市天河区棠东村', '13026762252', '男', '2021-01-04 15:40:00', '2021-01-04 15:40:00');
+INSERT INTO `employee` VALUES (1, 'danny', '123456', 5, 9, 1, 0, '广州市天河区棠东村', '13026762251', '男', '2021-01-27 00:00:00', '2021-01-04 15:14:25');
+INSERT INTO `employee` VALUES (2, 'jack', '123456', 3, 8, 2, 1, '广州市天河区棠东村', '13026762252', '女', '2021-01-04 15:40:00', '2021-01-04 15:40:00');
 INSERT INTO `employee` VALUES (3, 'mike', '123456', 3, 8, 3, 1, '广州市天河区棠东村', '13026762253', '男', '2021-01-09 09:51:47', '2021-01-09 09:51:54');
 INSERT INTO `employee` VALUES (4, 'chen', '123456', 3, 1, 4, 2, '广州市天河区棠东村', '13026762254', '男', '2021-01-09 09:54:47', '2021-01-09 09:54:49');
-INSERT INTO `employee` VALUES (5, 'zhang', '123456', 3, 1, 5, 3, '广州市天河区棠东村', '13026762255', '男', '2021-01-09 09:54:47', '2021-01-09 09:54:49');
-INSERT INTO `employee` VALUES (6, 'lee', '123456', 3, 7, 6, 5, '广州市天河区棠东村', '13026762255', '男', '2021-01-09 09:54:47', '2021-01-09 09:54:49');
+INSERT INTO `employee` VALUES (5, 'zhang', '123456', 3, 1, 5, 3, '广州市天河区棠东村', '13026762255', '男', '2021-01-26 00:00:00', '2021-01-09 09:54:49');
+INSERT INTO `employee` VALUES (6, 'lee', '123456', 3, 7, 6, 0, '广州市天河区棠东村', '13026762255', '男', '2021-01-09 09:54:47', '2021-01-09 09:54:49');
 INSERT INTO `employee` VALUES (8, 'Leon', '123456', 5, 8, 2, 1, '广州市天河区棠东村', '13026762258', '男', '2021-01-25 00:00:00', '2021-01-25 18:53:28');
-INSERT INTO `employee` VALUES (9, '111', '111111', 1, 1, 1, 1, '11', '1', '男', '2021-01-25 00:00:00', '2021-01-25 19:06:29');
-INSERT INTO `employee` VALUES (10, '111', '111111', 1, 1, 1, 1, '11', '1', '男', '2021-01-04 00:00:00', '2021-01-25 19:13:50');
+INSERT INTO `employee` VALUES (9, 'wang', '111111', 1, 1, 2, 1, '广州市天河区棠东村', '13026762258', '女', '2021-01-25 00:00:00', '2021-01-25 19:06:29');
+INSERT INTO `employee` VALUES (10, 'zhao', '111111', 1, 1, 3, 1, '广州市天河区棠东村', '13026762258', '女', '2021-01-04 00:00:00', '2021-01-25 19:13:50');
 
 -- ----------------------------
 -- Table structure for job
@@ -846,18 +846,19 @@ CREATE TABLE `sys_role`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `available` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '是否可用,1：可用，0不可用',
+  `superior` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES (1, '总经理', '1');
-INSERT INTO `sys_role` VALUES (2, 'HR部门经理', '1');
-INSERT INTO `sys_role` VALUES (3, '财务部门经理', '1');
-INSERT INTO `sys_role` VALUES (4, 'HR', '1');
-INSERT INTO `sys_role` VALUES (5, '财务', '1');
-INSERT INTO `sys_role` VALUES (6, '普通员工', '1');
+INSERT INTO `sys_role` VALUES (1, '总经理', '1', 0);
+INSERT INTO `sys_role` VALUES (2, 'HR部门经理', '1', 1);
+INSERT INTO `sys_role` VALUES (3, '财务部门经理', '1', 1);
+INSERT INTO `sys_role` VALUES (4, 'HR', '1', 2);
+INSERT INTO `sys_role` VALUES (5, '财务', '1', 3);
+INSERT INTO `sys_role` VALUES (6, '普通员工', '1', NULL);
 
 -- ----------------------------
 -- Table structure for sys_role_permission

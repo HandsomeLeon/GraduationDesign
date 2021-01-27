@@ -63,7 +63,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">生日</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="birthday" th:value="${employee.birthday}" id="date" lay-verify="required" class="layui-input">
+                    <input type="text" name="birthday" th:value="${#dates.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}" id="date" lay-verify="required" class="layui-input">
                 </div>
             </div>
         </div>
@@ -94,7 +94,6 @@
                 <label class="layui-form-label">角色</label>
                 <div class="layui-input-inline">
                     <select name="role" lay-filter="role" lay-verify="required">
-                        <!--<option value="">请选择</option>-->
                         <option th:each="role : ${roleList}" th:selected="${employee.role.id == role.id}"
                                 th:value="${role.id}" th:text="${role.name}"></option>
                     </select>
@@ -128,6 +127,7 @@
             layer = layui.layer,
             laydate = layui.laydate;
         var $ = layui.jquery;
+        var util = layui.util;
         var pass;
         var verify = new RegExp(/^[\S]{6,12}$/);
 
@@ -135,7 +135,6 @@
         laydate.render({
             elem: '#date',
             format: 'yyyy-MM-dd HH:mm:ss',
-            show: true
         });
 
         //自定义验证规则
@@ -158,54 +157,8 @@
             }
         });
 
-        // 选择角色后 上级主管数据回调
-        layui.use(['form', 'layedit', 'laydate'], function () {
-
-            var form = layui.form;
-            var $ = layui.jquery;
-
-            form.on('select(role)', function (data) {
-                //选择的select对象值；
-                var selectValue = data.value;
-
-                if (selectValue === "1" || selectValue === "6") {
-                    $('#managerId').empty();
-                    $('#managerId').append("<option value='0'>" + "默认" + "</option>");
-                    form.render("select");
-                    return false;
-                }
-                console.log(selectValue);
-                // json数据
-                var map = {
-                    "roleId": selectValue
-                };
-                // 发送post请求
-                $.ajax({
-                    type: 'post',
-                    url: '/employee/findManager',
-                    contentType: 'application/json',
-                    data: JSON.stringify(map),
-                    success: function (result) {
-                        $('#managerId').empty();
-                        console.log(result.data);
-                        $.each(result.data, function (index, item) {
-                            $('#managerId').append("<option value=" + item.id + ">" + item.username + "</option>");
-                        });
-                        form.render("select");
-                    },
-                    error: function () {
-                        layer.msg('获取上级主管失败');
-                        setTimeout(function () {
-                            location.reload();
-                        }, 1000);
-                    }
-                });
-            });
-        });
-
         //监听提交
         form.on('submit(save)', function (data) {
-            //laydate.render('date');
             var param = data.field;
             var json = {
                 'id': param.id,
@@ -253,7 +206,50 @@
     });
 </script>
 <script>
+    // 选择角色后 上级主管数据回调
+    layui.use(['form', 'layedit', 'laydate'], function () {
 
+        var form = layui.form;
+        var $ = layui.jquery;
+
+        form.on('select(role)', function (data) {
+            //选择的select对象值；
+            var selectValue = data.value;
+
+            if (selectValue === "1" || selectValue === "6") {
+                $('#managerId').empty();
+                $('#managerId').append("<option value='0'>" + "默认" + "</option>");
+                form.render("select");
+                return false;
+            }
+            console.log(selectValue);
+            // json数据
+            var map = {
+                "roleId": selectValue
+            };
+            // 发送post请求
+            $.ajax({
+                type: 'post',
+                url: '/employee/findManager',
+                contentType: 'application/json',
+                data: JSON.stringify(map),
+                success: function (result) {
+                    $('#managerId').empty();
+                    console.log(result.data);
+                    $.each(result.data, function (index, item) {
+                        $('#managerId').append("<option value=" + item.id + ">" + item.username + "</option>");
+                    });
+                    form.render("select");
+                },
+                error: function () {
+                    layer.msg('获取上级主管失败');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
+                }
+            });
+        });
+    });
 </script>
 </body>
 

@@ -224,7 +224,7 @@
                 data: JSON.stringify(json),  //表单数据
                 success: function (result) {
                     if (result === "success") {
-                        layer.msg('新增用户成功，1秒后自动关闭该窗口');
+                        layer.msg('新增用户成功');
                         //延迟1秒执行，目的是让用户看到提示
                         setTimeout(function () {
                             //1、先得到当前iframe层（弹出层）的索引  ///2、提交成功关闭弹出层窗口

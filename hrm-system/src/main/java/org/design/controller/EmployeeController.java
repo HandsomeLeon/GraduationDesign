@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -62,6 +63,7 @@ public class EmployeeController {
         model.addAttribute("departmentList", departmentService.findDepartmentList());
         model.addAttribute("jobList", jobService.findJobList());
         model.addAttribute("roleList", systemService.findRoleList());
+        model.addAttribute("timestamp", employee.getBirthday().toInstant(ZoneOffset.of("+8")).toEpochMilli());
         return "employee_update";
     }
 

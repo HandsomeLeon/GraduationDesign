@@ -19,6 +19,22 @@
         <result column="name" property="name"/>
     </resultMap>
 
+	<resultMap id="RolePermissionMap" type="MenuTree">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<collection property="children" select="findSubPermissionList" column="id">
+			<id column="id" property="id"/>
+			<result column="name" property="name"/>
+			<result column="type" property="type"/>
+			<result column="url" property="url"/>
+			<result column="permission_code" property="permissionCode"/>
+			<result column="parent_id" property="parentId"/>
+			<result column="parent_ids" property="parentIds"/>
+			<result column="sort_string" property="sortString"/>
+			<result column="available" property="available"/>
+		</collection>
+	</resultMap>
+
     <select id="findByUsername" parameterType="String" resultMap="BaseMap">
         SELECT *
 		FROM sys_permission
@@ -56,6 +72,14 @@
 		(SELECT sys_role_id
 		FROM sys_user_role
 		WHERE sys_user_id = #{username} and parent_id = #{parentId})) order by `id` asc;
+	</select>
+
+	<select id="findParentPermission" resultMap="RolePermissionMap">
+		select id, name from sys_permission where parent_id = 1
+	</select>
+
+	<select id="findSubPermissionList" resultType="Permission">
+		select * from sys_permission where parent_id = #{id}
 	</select>
 
 </mapper>

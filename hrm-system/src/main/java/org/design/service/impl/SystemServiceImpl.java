@@ -66,4 +66,16 @@ public class SystemServiceImpl implements SystemService {
         return roleList;
     }
 
+    @Override
+    public List<MenuTree> findAllPermission() {
+        List<MenuTree> menuTreeList = permissionMapper.findParentPermission();
+        if (menuTreeList == null) {
+            throw new ServiceException("获取数据失败");
+        }
+//        for (MenuTree menuTree : menuTreeList) {
+//            menuTree.setChildren(permissionMapper.findSubPermissionList(menuTree.getId()));
+//        }
+        return menuTreeList;
+    }
+
 }

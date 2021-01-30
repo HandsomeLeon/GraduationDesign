@@ -12,6 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -74,10 +77,25 @@ public class EmployeeController {
         return "success";
     }
 
-    /*public Employee get(@RequestBody Map<String, Object> data) {
-        Integer id = (Integer) data.get("id");
-        return employeeService.get(id);
-    }*/
+    @RequestMapping("/passwordPage/{id}")
+    public String passwordPage(@PathVariable Integer id, Model model) {
+        model.addAttribute("id", id);
+        return "password_update";
+    }
+
+    @RequestMapping("/updatePassword")
+    @ResponseBody
+    public String updatePassword(@RequestBody Map<String, Object> data) {
+        String id = (String) data.get("id");
+        String oldPassword = (String) data.get("oldPassword");
+        String newPassword = (String) data.get("newPassword");
+        Employee employee = employeeService.get(Integer.parseInt(id));
+        if (!employee.getPassword().equals(oldPassword)) {
+            return "fail";
+        }
+        employeeService.updatePassword(id, newPassword);
+        return "success";
+    }
 
     @RequestMapping("/find")
     public String find(Model model) {

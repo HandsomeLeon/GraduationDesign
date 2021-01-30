@@ -20,4 +20,7 @@ public interface SystemService {
     Role findRole(Integer id);
 
     List<Role> findRoleList();
+
+    List<MenuTree> findAllPermission();
+
 }

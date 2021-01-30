@@ -123,4 +123,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return employeeList;
     }
+
+    @Override
+    public void updatePassword(String id, String newPassword) {
+        Integer result = employeeMapper.updatePassword(id, newPassword);
+        if (result <= 0) {
+            throw new ServiceException("操作失败");
+        }
+    }
 }

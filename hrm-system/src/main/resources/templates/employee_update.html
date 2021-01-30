@@ -25,18 +25,6 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">密码</label>
-            <div class="layui-input-inline">
-                <input type="password" name="password" th:value="${employee.password}" lay-verify="password" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">确认密码</label>
-            <div class="layui-input-inline">
-                <input type="password" th:value="${employee.password}" lay-verify="confirmPassword" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
             <label class="layui-form-label">地址</label>
             <div class="layui-input-inline">
                 <input type="text" name="address" th:value="${employee.address}" lay-verify="required" class="layui-input">
@@ -127,9 +115,7 @@
             layer = layui.layer,
             laydate = layui.laydate;
         var $ = layui.jquery;
-        var util = layui.util;
         var pass;
-        var verify = new RegExp(/^[\S]{6,12}$/);
 
         //日期
         laydate.render({
@@ -143,17 +129,6 @@
                 if (value.length < 3) {
                     return '用户名至少得3个字符';
                 }
-            },
-            password: function (value) {
-                if (!verify.test(value)) {
-                    return '密码必须6到12位，且不能出现空格';
-                }
-                pass = value;
-            },
-            confirmPassword: function (value) {
-                if (value !== pass) {
-                    return '输入的密码请保持一致';
-                }
             }
         });
 
@@ -163,7 +138,6 @@
             var json = {
                 'id': param.id,
                 'username': param.username,
-                'password': param.password,
                 'address': param.address,
                 'phone': param.phone,
                 'gender': param.gender,

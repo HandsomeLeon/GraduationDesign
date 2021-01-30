@@ -70,4 +70,8 @@
         select id, username, role_id from employee where role_id =
             (select superior from sys_role where id = #{roleId});
     </select>
+
+    <update id="updatePassword" parameterType="String">
+        update employee set password = #{password} where id = #{id};
+    </update>
 </mapper>

@@ -24,4 +24,6 @@ public interface EmployeeMapper {
     Integer updateRole(Integer id, @Param("roleId") Integer roleId);
 
     List<Employee> findManagerByRoleId(@Param("roleId") Integer roleId);
+
+    Integer updatePassword(String id, String password);
 }

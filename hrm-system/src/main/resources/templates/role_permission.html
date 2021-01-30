@@ -16,13 +16,12 @@
 		</fieldset>
 		<div style="height: 350px; margin-left: 20px; margin-top: 20px; padding-left: 10px; padding-top: 20px;">
 			<div class="layui-form-item layui-form-text" style="width: 655px; height: 38px; border: #DCDCDC 1px solid; border-bottom: 0;  margin-bottom: 0;">
-				<label class="layui-form-label" style="width: 90px; border-right: #DCDCDC 1px solid; text-align: center;">角色</label>
-				<label class="layui-form-label" style="width: 100px; text-align: left;">权限列表</label>
+				<label class="layui-form-label" style="width: 90px; border-right: #DCDCDC 1px solid; text-align: center; font-size: 14px; font-weight: bold;">角色</label>
+				<label class="layui-form-label" style="width: 100px; text-align: left; font-size: 14px; font-weight: bold;">权限列表</label>
 			</div>
 			<div class="layui-form-item layui-form-text" style="width: 655px; border: #DCDCDC 1px solid;">
 				<label class="layui-form-label" style="width: 90px; text-align: center;" th:text="${role.name}"></label>
 				<div class="layui-input-block" style=" width: 534px; margin-left: 120px; background-color: white; border-left: #DCDCDC 1px solid">
-					<!--<textarea class="layui-textarea" disabled="disabled" style="height: 300px;" th:text="${permissionList}"></textarea>-->
 					<ul style="margin-left: 14px;" th:each="permission : ${permissionList}">
 						<li th:text="${permission}"></li>
 					</ul>

@@ -14,4 +14,7 @@ public interface PermissionMapper {
 
     List<Permission> findSubPermission(@Param("username") String username, @Param("parentId") String parentId);
 
+    List<MenuTree> findParentPermission();
+
+    //List<Permission> findSubPermissionList(@Param("parentId") Integer parentId);
 }

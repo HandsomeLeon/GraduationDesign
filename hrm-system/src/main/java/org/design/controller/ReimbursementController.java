@@ -40,9 +40,7 @@ public class ReimbursementController {
         reimbursement.setUserId(Long.parseLong(employee.getId().toString()));
 
         reimbursementService.save(reimbursement);
-
         processService.pushProcess(reimbursement.getId(), employee.getUsername());
-
         return "success";
     }
 
@@ -75,4 +73,5 @@ public class ReimbursementController {
         }
         return "success";
     }
+
 }

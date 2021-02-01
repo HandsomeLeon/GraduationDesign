@@ -13,7 +13,7 @@
 
 <body>
 
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
     <legend>用户列表</legend>
 </fieldset>
 
@@ -177,7 +177,10 @@
                     shadeClose: true,
                     shade: 0.7,
                     area: ['720px', '85%'],
-                    content: ['/employee/updatePage/' + data.id, ''] //iframe的url, no不显示滚动条
+                    content: ['/employee/updatePage/' + data.id, ''], //iframe的url, no不显示滚动条
+                    end: function () {                   //请求回调，窗口销毁时执行
+                        location.reload();                  //窗口销毁时刷新主页面数据
+                    }
                 });
             }
         });

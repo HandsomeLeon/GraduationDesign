@@ -42,7 +42,11 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
     @Override
     public Reimbursement get(Integer integer) {
-        return null;
+        Reimbursement reimbursement = reimbursementMapper.get(integer);
+        if (reimbursement == null) {
+            throw new ServiceException("获取数据失败");
+        }
+        return reimbursement;
     }
 
     @Override

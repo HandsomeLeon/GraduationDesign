@@ -1,5 +1,6 @@
 package org.design.controller;
 
+import org.activiti.engine.task.Task;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -10,6 +11,7 @@ import org.design.service.SystemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -78,11 +80,32 @@ public class SystemController {
         return data;
     }
 
-    @RequestMapping("/role/updatePage/{id}")
-    public String updatePage(@PathVariable Integer id, Model model) {
+    @RequestMapping("/role/updatePage/{roleId}")
+    public String updatePage(@PathVariable Integer roleId, Model model) {
         model.addAttribute("permissionList", systemService.findAllPermission());
-        model.addAttribute("id", id);
+        model.addAttribute("roleId", roleId);
         return "role_update";
+    }
+
+    @RequestMapping("/role/findPermissionIdList")
+    @ResponseBody
+    public List<Integer> findPermissionByRoleId(@RequestBody Map<String, Object> data) {
+        String roleIdStr = (String) data.get("roleId");
+        Integer roleId = Integer.parseInt(roleIdStr);
+        return systemService.findPermissionByRoleId(roleId);
+    }
+
+    @RequestMapping("/role/update")
+    @ResponseBody
+    public String update(@RequestBody Map<String, Object> param) {
+        List<String> permissionIds = (List<String>) param.get("permissionIds");
+        String roleId = (String) param.get("roleId");
+        System.out.println(roleId);
+        for (String permissionId : permissionIds) {
+            System.out.println(permissionId);
+        }
+        systemService.updateRole(roleId, permissionIds);
+        return "success";
     }
 
 }

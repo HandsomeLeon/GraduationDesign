@@ -4,7 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.task.Task;
+import org.apache.shiro.SecurityUtils;
+import org.design.model.CustomizeComment;
+import org.design.model.CustomizeTask;
+import org.design.model.Employee;
+import org.design.model.Reimbursement;
 import org.design.service.ProcessService;
+import org.design.service.ReimbursementService;
 import org.design.utils.ServiceException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +26,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +36,8 @@ public class ProcessController {
 
     @Resource
     private ProcessService processService;
+    @Resource
+    private ReimbursementService reimbursementService;
 
     /**
      * 跳转发布流程页面
@@ -80,13 +90,6 @@ public class ProcessController {
         return "success";
     }
 
-    /*@RequestMapping("/findImagePage")
-    public String findImagePage(String id, String imageName, Model model) {
-        model.addAttribute("id", id);
-        model.addAttribute("imageName", imageName);
-        return "image";
-    }*/
-
     @RequestMapping("/findProcessImage")
     public void findProcessImage(String id, String imageName, HttpServletResponse response) throws IOException {
 
@@ -101,6 +104,48 @@ public class ProcessController {
         out.close();
         inputStream.close();
 
+    }
+
+    @RequestMapping("/taskListPage")
+    public String findTaskListPage() {
+        return "task_list";
+    }
+
+    @RequestMapping("findTaskList")
+    @ResponseBody
+    public Map<String, Object> findTaskList() {
+        Employee employee = (Employee) SecurityUtils.getSubject().getPrincipal();
+        System.out.println("当前用户名：" + employee.getUsername());
+        List<CustomizeTask> taskList = processService.findTaskList(employee.getUsername());
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", 0);
+        data.put("msg", "");
+        data.put("count", taskList.size());
+        data.put("data", taskList);
+        return data;
+    }
+
+    @RequestMapping("/taskPage/{taskId}")
+    public String taskPage(@PathVariable String taskId, Model model) {
+        String reimbursementId = processService.findReimbursement(taskId);
+        Reimbursement reimbursement = reimbursementService.get(Integer.parseInt(reimbursementId));
+        List<String> flowDirectionList = processService.findFlowDirectionList(taskId);
+        model.addAttribute("taskId", taskId);
+        model.addAttribute("reimbursement", reimbursement);
+        model.addAttribute("flowDirectionList", flowDirectionList);
+        return "task_update";
+    }
+
+    @RequestMapping("/findCommentList")
+    @ResponseBody
+    public Map<String, Object> findCommentList(String taskId) {
+        List<CustomizeComment> commentList = processService.findCommentList(taskId);
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", 0);
+        data.put("msg", "");
+        data.put("count", commentList.size());
+        data.put("data", commentList);
+        return data;
     }
 
 }

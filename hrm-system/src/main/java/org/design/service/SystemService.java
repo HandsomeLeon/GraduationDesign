@@ -1,5 +1,6 @@
 package org.design.service;
 
+import org.activiti.engine.task.Task;
 import org.design.model.MenuTree;
 import org.design.model.Permission;
 import org.design.model.Role;
@@ -22,5 +23,9 @@ public interface SystemService {
     List<Role> findRoleList();
 
     List<MenuTree> findAllPermission();
+
+    List<Integer> findPermissionByRoleId(Integer roleId);
+
+    void updateRole(String roleId, List<String> permissionIds);
 
 }

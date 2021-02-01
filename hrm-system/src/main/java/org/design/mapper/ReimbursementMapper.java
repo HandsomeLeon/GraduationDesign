@@ -11,4 +11,6 @@ public interface ReimbursementMapper {
     List<Reimbursement> findAll();
 
     Integer delete(Integer id);
+
+    Reimbursement get(Integer id);
 }

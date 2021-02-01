@@ -40,7 +40,7 @@
     </delete>
 
     <update id="update" parameterType="Employee">
-        update employee set username = #{username}, password = #{password}, department_id = #{department.id}, job_id = #{job.id},
+        update employee set username = #{username}, department_id = #{department.id}, job_id = #{job.id},
         role_id = #{role.id}, manager_id = #{managerId}, address = #{address}, phone = #{phone}, gender = #{gender},
         birthday = #{birthday}
         where id = #{id};

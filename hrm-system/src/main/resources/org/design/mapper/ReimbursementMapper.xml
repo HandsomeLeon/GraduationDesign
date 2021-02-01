@@ -27,4 +27,8 @@
     <select id="findAll" resultMap="BaseMap">
         select * from reimbursement
     </select>
+
+    <select id="get" parameterType="Integer" resultType="Reimbursement">
+        select * from reimbursement where id = #{id}
+    </select>
 </mapper>

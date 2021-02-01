@@ -44,21 +44,9 @@
 			layui.use(['form', 'layedit', 'laydate'], function(){
 				var form = layui.form;
                 var layer = layui.layer;
-				var	layedit = layui.layedit;
-				var	laydate = layui.laydate;
 
 				//监听submit提交按钮 button ，lay-filter 为 【userUpdate】 的
 				form.on('submit(update)', function(data){
-					 // 此段代码可以获取提交的表单数据
-					 //console.log('data:' + JSON.stringify(data.field));
-
-					// 将form表单数据序列化并转为json格式
-					/*var fields = $('#updateForm').serializeArray();
-					var obj = {}; //声明一个对象
-					$.each(fields, function(index, field) {
-						obj[field.name] = field.value; //通过变量，将属性值，属性一起放到对象中
-					});
-					console.log(obj);*/
 					$.ajax({
 						type: "POST",
 						url: "/department/update" ,//url

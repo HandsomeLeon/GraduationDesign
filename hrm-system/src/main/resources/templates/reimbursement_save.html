@@ -21,7 +21,7 @@
 				<div class="layui-form-item layui-form-text" style="width: 645px;">
 					<label class="layui-form-label">标题</label>
 					<div class="layui-input-block">
-						<input type="text" name="title" lay-verify="required" autocomplete="off" class="layui-input">
+						<input type="text" name="title" lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item layui-form-text" style="width: 645px;">
@@ -75,7 +75,7 @@
 								layer.msg('提交申请成功');
 							}
 							setTimeout(function() {
-								location.reload();
+								location.href = '/process/taskPage';
 							}, 1000);
 						},
 						error : function() {

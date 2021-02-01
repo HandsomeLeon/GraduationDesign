@@ -1,7 +1,9 @@
 package org.design.service.impl;
 
+import org.activiti.engine.task.Task;
 import org.design.mapper.PermissionMapper;
 import org.design.mapper.RoleMapper;
+import org.design.mapper.RolePermissionMapper;
 import org.design.model.MenuTree;
 import org.design.model.Permission;
 import org.design.model.Role;
@@ -19,6 +21,8 @@ public class SystemServiceImpl implements SystemService {
     private PermissionMapper permissionMapper;
     @Resource
     private RoleMapper roleMapper;
+    @Resource
+    private RolePermissionMapper rolePermissionMapper;
 
     @Override
     public List<Permission> findPermissionListByUsername(String username) {
@@ -68,14 +72,31 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     public List<MenuTree> findAllPermission() {
-        List<MenuTree> menuTreeList = permissionMapper.findParentPermission();
+        List<MenuTree> menuTreeList = permissionMapper.findAllPermission();
         if (menuTreeList == null) {
             throw new ServiceException("获取数据失败");
         }
-//        for (MenuTree menuTree : menuTreeList) {
-//            menuTree.setChildren(permissionMapper.findSubPermissionList(menuTree.getId()));
-//        }
         return menuTreeList;
+    }
+
+    @Override
+    public List<Integer> findPermissionByRoleId(Integer roleId) {
+        List<Integer> permissionIdList = rolePermissionMapper.findPermissionByRoleId(roleId);
+        if (permissionIdList == null) {
+            throw new ServiceException("获取数据失败");
+        }
+        return permissionIdList;
+    }
+
+    @Override
+    public void updateRole(String roleId, List<String> permissionIds) {
+        Integer result = rolePermissionMapper.delete(roleId);
+        if (result <= 0) {
+            throw new ServiceException("操作失败");
+        }
+        for (String permissionId : permissionIds) {
+            rolePermissionMapper.save(roleId, permissionId);
+        }
     }
 
 }

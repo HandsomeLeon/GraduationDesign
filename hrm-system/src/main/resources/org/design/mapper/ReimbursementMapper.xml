@@ -31,4 +31,12 @@
     <select id="get" parameterType="Integer" resultType="Reimbursement">
         select * from reimbursement where id = #{id}
     </select>
+
+    <update id="updateState" parameterType="String">
+        update reimbursement set state = #{state} where id = #{id};
+    </update>
+
+    <select id="findByState" parameterType="Integer" resultMap="BaseMap">
+        select * from reimbursement where state = #{state}
+    </select>
 </mapper>

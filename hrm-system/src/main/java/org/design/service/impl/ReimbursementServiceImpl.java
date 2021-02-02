@@ -71,4 +71,28 @@ public class ReimbursementServiceImpl implements ReimbursementService {
     public Map<String, Object> findExample(Reimbursement model, Integer page, Integer limit) {
         return null;
     }
+
+    @Override
+    public void updateState(String reimbursementId, Integer state) {
+        Integer result = reimbursementMapper.updateState(reimbursementId, state.toString());
+        if (result == null) {
+            throw new ServiceException("操作失败");
+        }
+    }
+
+    @Override
+    public Map<String, Object> findByState(Integer page, Integer limit, Integer state) {
+        PageHelper.startPage(page, limit);
+        List<Reimbursement> reimbursementList = reimbursementMapper.findByState(state);
+        if (reimbursementList == null) {
+            throw new ServiceException("获取数据失败");
+        }
+        PageInfo<Reimbursement> pageInfo = new PageInfo<>(reimbursementList);
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", 0);
+        data.put("msg", "");
+        data.put("count", pageInfo.getTotal());
+        data.put("data", reimbursementList);
+        return data;
+    }
 }

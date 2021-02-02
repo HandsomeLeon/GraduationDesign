@@ -40,7 +40,7 @@ public class ReimbursementController {
         reimbursement.setUserId(Long.parseLong(employee.getId().toString()));
 
         reimbursementService.save(reimbursement);
-        processService.pushProcess(reimbursement.getId(), employee.getUsername());
+        processService.startProcess(reimbursement.getId(), employee.getUsername());
         return "success";
     }
 
@@ -53,6 +53,18 @@ public class ReimbursementController {
     @ResponseBody
     public Map<String, Object> findAll(Integer page, Integer limit) {
         return reimbursementService.findAll(page, limit);
+    }
+
+    @RequestMapping("/findAuthenticatedReimbursementList")
+    @ResponseBody
+    public Map<String, Object> findAuthenticatedReimbursementList(Integer page, Integer limit) {
+        return reimbursementService.findByState(page, limit, 2);
+    }
+
+    @RequestMapping("/findNotAuthenticateReimbursementList")
+    @ResponseBody
+    public Map<String, Object> findNotAuthenticateReimbursementList(Integer page, Integer limit) {
+        return reimbursementService.findByState(page, limit, 1);
     }
 
     @RequestMapping("/delete")

@@ -17,8 +17,7 @@
 <div style="height: 350px; margin-left: 20px; padding-left: 10px; padding-top: 10px;">
 
     <form class="layui-form layui-form-pane" action="/process/pushProcess" method="post">
-        <input id="taskId" type="hidden" name="taskId" th:value="${taskId}" />
-        <input id="reimbursementId" type="hidden" name="reimbursementId" th:value="${reimbursement.id}" />
+        <input id="reimbursementId" type="hidden" th:value="${reimbursement.id}" />
         <div class="layui-form-item layui-form-text" style="width: 645px;">
             <label class="layui-form-label">标题</label>
             <div class="layui-input-block">
@@ -38,72 +37,25 @@
                 <textarea th:text="${reimbursement.remark}" class="layui-textarea" disabled="disabled"></textarea>
             </div>
         </div>
-        <div class="layui-form-item layui-form-text" style="width: 645px;">
-            <label class="layui-form-label">批注</label>
-            <div class="layui-input-block">
-                <textarea placeholder="请输入内容" lay-verify="required" class="layui-textarea" name="comment"></textarea>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <input type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="complete" id="flowDirection"
-                  name="flowDirection" th:each="flowDirection : ${flowDirectionList}" th:value="${flowDirection}"/>
-        </div>
     </form>
 </div>
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 200px;">
+<fieldset class="layui-elem-field layui-field-title">
     <legend>报销批注信息列表</legend>
 </fieldset>
 
 <table class="layui-hide" id="test" lay-filter="test"></table>
 
 <script th:src="@{'/static/layui.js'}" charset="utf-8"></script>
-<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
-<script>
-    layui.use(['form'], function () {
-        var form = layui.form;
-        var $ = layui.jquery;
-
-        form.verify({
-        });
-
-        //监听submit提交按钮 button ，lay-filter 为 【save】 的
-        form.on('submit(complete)', function (data) {
-            var flowDirection = $(this).val();
-            data.field.flowDirection = flowDirection;
-            //console.log(data.field);
-            $.ajax({
-                type: "POST",
-                url: "/process/pushProcess",//url
-                contentType: "application/json",
-                data: JSON.stringify(data.field),  //表单数据
-                success: function (response) {
-                    if (response === "success") {
-                        layer.msg('提交申请成功');
-                    }
-                    setTimeout(function () {
-                        location.href = '/process/taskListPage';
-                    }, 1000);
-                },
-                error: function () {
-                    layer.msg('操作失败');
-                },
-            });
-            //阻止页面跳转
-            return false;
-        });
-
-    });
-</script>
 <script>
     layui.use('table', function () {
         var table = layui.table;
         var $ = layui.jquery;
         table.render({
             elem: '#test',
-            url: '/process/findCommentList',
+            url: '/process/findHistoricalCommentList',
             width: 1000,
             where: {
-                taskId: $('#taskId').val()
+                reimbursementId: $('#reimbursementId').val()
             },
             cols: [
                 [{

@@ -13,4 +13,6 @@ public interface EmployeeService extends BaseService<Employee, Integer> {
     List<Employee> findManagerByRoleId(Integer roleId);
 
     void updatePassword(String id, String newPassword);
+
+    Employee findManager(Integer managerId);
 }

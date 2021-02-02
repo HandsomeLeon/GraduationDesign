@@ -8,6 +8,8 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmTransition;
@@ -21,8 +23,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.design.model.*;
 import org.design.service.AbsenceService;
 import org.design.service.ProcessService;
+import org.design.service.ReimbursementService;
 import org.design.utils.ServiceException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
@@ -46,6 +50,8 @@ public class ProcessServiceImpl implements ProcessService {
     private HistoryService historyService;
     @Resource
     private AbsenceService absenceService;
+    @Resource
+    private ReimbursementService reimbursementService;
 
 
     @Override
@@ -65,7 +71,7 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public void pushProcess(Integer id, String username) {
+    public void startProcess(Integer id, String username) {
 
         Map<String, Object> map = new HashMap<>();
 
@@ -239,6 +245,96 @@ public class ProcessServiceImpl implements ProcessService {
             }
         }
         return flowDirectionList;
+    }
+
+    @Transactional
+    @Override
+    public void pushProcess(String taskId, String username, String comment, String flowDirection, String reimbursementId) {
+        Task task = this.taskService.createTaskQuery().taskId(taskId).singleResult();
+        // 流程定义实例ID
+        String processInstanceId = task.getProcessInstanceId();
+        //·添加批注中批注人名称
+        Authentication.setAuthenticatedUserId(username);
+        //·添加批注
+        this.taskService.addComment(taskId, processInstanceId, comment);
+        //·创建  流程变量 message
+        Map<String, Object> messageMap = new HashMap<>();
+        //·根据所选的按钮  推进流程
+        if (flowDirection != null && !"默认提交".equals(flowDirection)) {
+            messageMap.put("message", flowDirection);
+            //·提交流程 并 设置流程变量
+            this.taskService.complete(taskId, messageMap);
+
+        } else { //·普通员工  提交流程
+            this.taskService.complete(taskId);
+        }
+        //·推进完流程之后，判断流程是否结束
+        ProcessInstance processInstance = this.runtimeService
+                .createProcessInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .singleResult();
+        //·流程结束后  设置报销表的状态为  结束（即为2）
+        if (processInstance == null) {
+            this.reimbursementService.updateState(reimbursementId, 2);
+        }
+    }
+
+    @Override
+    public Task findTaskByReimbursementId(Integer reimbursementId) {
+        String BUSINESS_KEY = "baoxiaoprocess." + reimbursementId;
+        return this.taskService.createTaskQuery().processInstanceBusinessKey(BUSINESS_KEY).singleResult();
+    }
+
+    @Override
+    public List<CustomizeComment> findHistoricalCommentList(Integer reimbursementId) {
+        String BUSINESS_KEY = "baoxiaoprocess." + reimbursementId;
+        HistoricProcessInstance historicProcessInstance = this.historyService
+                .createHistoricProcessInstanceQuery()
+                .processInstanceBusinessKey(BUSINESS_KEY)
+                .singleResult();
+        List<Comment> commentList = this.taskService.getProcessInstanceComments(historicProcessInstance.getId());
+        List<CustomizeComment> customizeCommentList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            CustomizeComment customizeComment = new CustomizeComment();
+            customizeComment.setId(comment.getId());
+            customizeComment.setTime(comment.getTime());
+            customizeComment.setUserId(comment.getUserId());
+            customizeComment.setFullMessage(comment.getFullMessage());
+            customizeCommentList.add(customizeComment);
+        }
+        return customizeCommentList;
+    }
+
+    @Override
+    public ProcessDefinition findProcessDefinition(String taskId) {
+        Task task = this.taskService.createTaskQuery().taskId(taskId).singleResult();
+        ProcessDefinition processDefinition = this.repositoryService
+                .createProcessDefinitionQuery().processDefinitionId(task.getProcessDefinitionId()).singleResult();
+        return processDefinition;
+    }
+
+    @Override
+    public Map<String, Object> findCurrentProcessCoordinates(String taskId) {
+        Map<String, Object> coordinatesMap = new HashMap<>();
+        //·获取当前正在执行的任务
+        Task task = this.taskService.createTaskQuery().taskId(taskId).singleResult();
+        //·获取 流程定义 实体
+        ProcessDefinitionEntity definitionEntity = (ProcessDefinitionEntity) this.repositoryService
+                .getProcessDefinition(task.getProcessDefinitionId());
+        //·获取流程实例
+        ProcessInstance processInstance = this.runtimeService
+                .createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
+        //·获取当前活动的id
+        String activityId = processInstance.getActivityId();
+        //·获取当前的活动
+        ActivityImpl activityImpl = definitionEntity.findActivity(activityId);
+        if (activityImpl != null) {
+            coordinatesMap.put("x", activityImpl.getX());
+            coordinatesMap.put("y", activityImpl.getY());
+            coordinatesMap.put("width", activityImpl.getWidth());
+            coordinatesMap.put("height", activityImpl.getHeight());
+        }
+        return coordinatesMap;
     }
 
 }

@@ -2,6 +2,7 @@ package org.design.service;
 
 import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.design.model.CustomizeComment;
 import org.design.model.CustomizeTask;
@@ -20,7 +21,7 @@ public interface ProcessService {
      */
     void save(InputStream inputStream, String processName);
 
-    void pushProcess(Integer id, String username);
+    void startProcess(Integer id, String username);
 
     Map<String, Object> findDeploymentList(Integer page, Integer limit);
 
@@ -37,4 +38,14 @@ public interface ProcessService {
     List<CustomizeComment> findCommentList(String taskId);
 
     List<String> findFlowDirectionList(String taskId);
+
+    void pushProcess(String taskId, String username, String comment, String flowDirection, String reimbursementId);
+
+    Task findTaskByReimbursementId(Integer reimbursementId);
+
+    List<CustomizeComment> findHistoricalCommentList(Integer reimbursementId);
+
+    ProcessDefinition findProcessDefinition(String taskId);
+
+    Map<String, Object> findCurrentProcessCoordinates(String taskId);
 }

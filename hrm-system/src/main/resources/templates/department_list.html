@@ -23,21 +23,21 @@
     <div class="layui-inline">
         <input type="text" name="name" id="keyword" placeholder="部门名称" class="layui-input">
     </div>
-    <button type="submit" class="layui-btn" id="search">搜索</button>
+    <button type="submit" class="layui-btn" id="search"><i class="layui-icon">&#xe615;</i>搜索</button>
 </div>
 
 <table class="layui-hide" id="test" lay-filter="test"></table>
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn" lay-event="batchDelete">批量删除</button>
-        <button class="layui-btn layui-btn-normal" lay-event="saveDepartment">新建部门</button>
+        <button class="layui-btn layui-btn-danger" lay-event="batchDelete"><i class="layui-icon">&#xe640;</i>批量删除</button>
+        <button class="layui-btn layui-btn-normal" lay-event="saveDepartment"><i class="layui-icon">&#xe654;</i>新建部门</button>
     </div>
 </script>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
 </script>
 
 <script src="../static/layui.js" charset="utf-8"></script>
@@ -57,11 +57,11 @@
                 [{
                     type: 'checkbox',
                     fixed: 'left',
-                    width: 106
+                    width: 130
                 }, {
                     field: 'name',
                     title: '部门名称',
-                    width: 600
+                    width: 560
                 }, {
                     field: 'remark',
                     title: '备注',

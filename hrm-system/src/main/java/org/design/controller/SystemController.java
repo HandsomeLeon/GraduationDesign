@@ -63,6 +63,11 @@ public class SystemController {
         return "index";
     }
 
+    @RequestMapping("/system/welcome")
+    public String welcome() {
+        return "welcome";
+    }
+
     @RequestMapping("/role/find")
     public String findRoleList() {
         return "role_list";

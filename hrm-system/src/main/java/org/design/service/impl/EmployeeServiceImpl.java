@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Service(value = "employeeService")
 public class EmployeeServiceImpl implements EmployeeService {
 
     @Resource
@@ -130,5 +130,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (result <= 0) {
             throw new ServiceException("操作失败");
         }
+    }
+
+    @Override
+    public Employee findManager(Integer managerId) {
+        return get(managerId);
     }
 }

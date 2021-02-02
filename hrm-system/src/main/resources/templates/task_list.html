@@ -74,11 +74,8 @@
                     title: '编辑任务',
                     shadeClose: true,
                     shade: 0.7,
-                    area: ['660px', '48%'],
-                    content: ['/job/updatePage/' + data.id, 'no'], //iframe的url, no不显示滚动条
-                    end: function () {                   //请求回调，窗口销毁时执行
-                        location.reload();                  //窗口销毁时刷新主页面数据
-                    }
+                    area: ['775px', '70%'],
+                    content: ['/process/findCurrentProcessImage/' + data.id, 'no'] //iframe的url, no不显示滚动条
                 });
             }
         });

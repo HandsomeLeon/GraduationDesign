@@ -29,18 +29,17 @@ public class ShiroConfig {
     }
 
     //将自己的验证方式加入容器
-    @Bean
+    /*@Bean
     public CustomizeRealm myShiroRealm() {
         CustomizeRealm customizeRealm = new CustomizeRealm();
         return customizeRealm;
-    }
-
+    }*/
 
     //权限管理，配置主要是Realm的管理认证
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(myShiroRealm());
+        //securityManager.setRealm(myShiroRealm());
         return securityManager;
     }
 
@@ -54,16 +53,15 @@ public class ShiroConfig {
 
         //表示静态资源可以匿名访问
         map.put("/static/**","anon"); //详细规则请见本目录下URL匹配规则.md文件
+        map.put("/captcha/**", "anon"); // 允许访问验证码图片生成路径
         //登出
         map.put("/logout", "logout");
+        //登录 需要被自定义拦截器拦截获取验证码
+        //map.put("/login", "captchaValidate,authc");
         //对所有用户认证
         map.put("/**", "authc");//authc表示需要认证才可以访问,anon表示可以匿名访问
 
-        Map<String, Filter> filterMap = new HashMap<>();
-        filterMap.put("authc", new CustomizeFilter());
-        // 设置自定义Filter
-        shiroFilterFactoryBean.setFilters(filterMap);
-
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         //登录
         shiroFilterFactoryBean.setLoginUrl("/login");
         //首页
@@ -71,9 +69,12 @@ public class ShiroConfig {
         //错误页面，认证不通过跳转
         shiroFilterFactoryBean.setUnauthorizedUrl("/error");
 
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
-
-
+        // 自定义拦截器
+        //Map<String, Filter> filterMap = new HashMap<>();
+        //filterMap.put("captchaValidate", new CaptchaValidateFilter());
+        //filterMap.put("authc", new CustomizeFilter());
+        // 设置自定义Filter
+        //shiroFilterFactoryBean.setFilters(filterMap);
         return shiroFilterFactoryBean;
     }
 
@@ -83,17 +84,5 @@ public class ShiroConfig {
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
     }
-
-    /**
-     * 自定义Filter 重定向到index
-     * @return
-     */
-    /*@Bean
-    public CustomizeFilter customizeFilter() {
-        CustomizeFilter customizeFilter = new CustomizeFilter();
-        customizeFilter.setUsernameParam("username");
-        customizeFilter.setPasswordParam("password");
-        return customizeFilter;
-    }*/
 
 }

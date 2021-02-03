@@ -1,13 +1,20 @@
 package org.design.controller;
 
+import com.google.code.kaptcha.Constants;
 import org.activiti.engine.task.Task;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.design.model.Employee;
 import org.design.model.MenuTree;
 import org.design.model.Role;
 import org.design.service.SystemService;
+import org.design.utils.ServiceException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,19 +35,50 @@ public class SystemController {
     @Resource
     private SystemService systemService;
 
-    @RequestMapping("/login")
+    /*@RequestMapping("/login")
     public String login(HttpServletRequest request, Model model) {
-
         System.out.println("正在进行登录操作");
         String message = (String) request.getAttribute("shiroLoginFailure");
-
+        System.out.println(message);
         if (message != null) {
-
             if (UnknownAccountException.class.getName().equals(message)) {
                 model.addAttribute("errorMsg", "账号不存在");
             } else if (IncorrectCredentialsException.class.getName().equals(message)) {
                 model.addAttribute("errorMsg", "密码不正确");
+            } else if ("验证码错误".equals(message)) {
+                model.addAttribute("errorMsg", "验证码错误");
             } else {
+                model.addAttribute("errorMsg", "服务器错误");
+            }
+        }
+        return "login";
+    }*/
+
+    @RequestMapping("/login")
+    public String login(String username, String password, String captchaCode, Model model) {
+        System.out.println("正在进行登录操作");
+
+        System.out.println(username);
+        System.out.println(password);
+        System.out.println(captchaCode);
+        Subject subject = SecurityUtils.getSubject();
+        Session session = SecurityUtils.getSubject().getSession();
+        UsernamePasswordToken passwordToken = new UsernamePasswordToken(username, password);
+        String validateCode = (String) session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        if (captchaCode != null && validateCode != null) {
+            if (!captchaCode.equals(validateCode)) {
+                model.addAttribute("errorMsg", "验证码错误");
+                return "login";
+            }
+        }
+        if (passwordToken.getUsername() != null) {
+            try {
+                subject.login(passwordToken);
+            } catch (UnknownAccountException e) {
+                model.addAttribute("errorMsg", "账号不存在");
+            } catch (IncorrectCredentialsException e) {
+                model.addAttribute("errorMsg", "密码不正确");
+            } catch (Exception e) {
                 model.addAttribute("errorMsg", "服务器错误");
             }
         }
@@ -48,8 +87,9 @@ public class SystemController {
 
     /**
      * 主页
+     *
      * @param model
-     * @return  返回 menuTreeList
+     * @return 返回 menuTreeList
      */
     @RequestMapping("/index")
     public String index(Model model) {

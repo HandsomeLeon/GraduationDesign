@@ -1,9 +1,6 @@
 package org.design.shiro;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -49,16 +46,12 @@ public class CustomizeRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-
         System.out.println("正在进行验证");
-
         String username = authenticationToken.getPrincipal().toString();
         Employee employee = employeeService.findByUsername(username);
-
         if (employee == null) {
             return null;
         }
-
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(employee, employee.getPassword(), "CustomizeRealm");
         return authenticationInfo;
     }

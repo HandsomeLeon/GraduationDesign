@@ -10,18 +10,28 @@
 		<div class="layui-layout layui-layout-admin">
 			<div class="layui-header">
 				<div class="layui-logo">校园超市员工管理系统</div>
+				<ul class="layui-nav layui-layout-left">
+					<li class="layui-nav-item"><a href=""><i class="layui-icon">&#xe68e;</i> 主页</a></li>
+					<li class="layui-nav-item">
+						<a th:href="@{'/employee/updatePage/' + ${employee.id}}" target="appiframe">
+							<i class="layui-icon">&#xe857;</i> 基本资料
+						</a>
+					</li>
+				</ul>
 				<ul class="layui-nav layui-layout-right">
 					<li class="layui-nav-item">
 						<a href="javascript:;">
 							<img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+							<i class="layui-icon">&#xe770;</i>&nbsp;
 							<span th:text="${employee.username}"></span>
 						</a>
 						<dl class="layui-nav-child">
-							<dd><a th:href="@{'/employee/updatePage/' + ${employee.id}}" target="appiframe">基本资料</a></dd>
-							<dd><a th:href="@{'/employee/passwordPage/' + ${employee.id}}" target="appiframe">安全设置</a></dd>
+							<dd><a th:href="@{'/employee/passwordPage/' + ${employee.id}}" target="appiframe">
+								<i class="layui-icon">&#xe60b;</i> 安全设置
+							</a></dd>
 						</dl>
 					</li>
-					<li class="layui-nav-item"><a href="logout">退出登录</a></li>
+					<li class="layui-nav-item"><a href="logout"><i class="layui-icon">&#xe682</i> 退出登录</a></li>
 				</ul>
 			</div>
 

@@ -26,7 +26,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label" style="width: 100px;">用户名&nbsp;<i class="layui-icon">&#xe66f;</i> </label>
             <div class="layui-input-inline">
-                <input type="text" style="width: 220px;" name="username" lay-verify="required" placeholder="用户名"
+                <input type="text" style="width: 220px;" name="username" lay-verify="username" placeholder="用户名"
                        autocomplete="off" class="layui-input">
             </div>
             <br/><br/><br/>
@@ -34,15 +34,15 @@
             <label class="layui-form-label" style="width: 100px; margin-top: 7px;">密&nbsp;&nbsp;&nbsp;&nbsp;码&nbsp;<i
                     class="layui-icon">&#xe673;</i></label>
             <div class="layui-input-inline" style=" margin-top: 7px;">
-                <input type="password" style="width: 220px;" name="password" lay-verify="required" placeholder="密码"
+                <input type="password" style="width: 220px;" name="password" lay-verify="password" placeholder="密码"
                        autocomplete="off" class="layui-input">
             </div>
             <br/><br/><br/>
 
             <label class="layui-form-label" style="width: 100px; margin-top: 14px;">验证码&nbsp;<i class="layui-icon">&#xe679;</i></label>
             <div class="layui-input-inline" style=" margin-top: 14px;">
-                <input type="text" style="width: 100px; float: left;" name="captchaCode" lay-verify="required" placeholder="验证码"
-                       autocomplete="off" class="layui-input">
+                <input type="text" style="width: 100px; float: left;" id="captchaCode"
+                       lay-verify="captcha" placeholder="验证码" autocomplete="off" class="layui-input">
                 <img src="../captcha/kaptcha.jpg" id="codeImage" onclick="changeCode()" title="图片看不清？点击重新得到验证码"
                      style="position: absolute; left: 120px; width: 100px; height: 38px; cursor:pointer;"/>
             </div>
@@ -59,26 +59,57 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
     layui.use(['form'], function () {
+        var form = layui.form;
+        var pass;
+        var verify = new RegExp(/^[\S]{6,12}$/);
+
+        //自定义验证规则
+        form.verify({
+            username: function (value) {
+                if (value.length < 3) {
+                    return '用户名至少得3个字符';
+                }
+            },
+            password: function (value) {
+                if (!verify.test(value)) {
+                    return '密码必须6到12位，且不能出现空格';
+                }
+                pass = value;
+            },
+            captcha: function (value) {
+                if (value.length < 4) {
+                    return '验证码不够4位';
+                }
+            }
+        });
     });
-</script>
-<script th:inline="javascript">
-    layui.use(['layer'], function () {
-        var layer = layui.layer;
-        var message = [[${shiroLoginFailure}]] ? [[${shiroLoginFailure}]] : getUrlPara("shiroLoginFailure");
-        if (message) {
-            layer.msg(message);
-        }
-    });
-    function getUrlPara(name) {
-        var url = document.location.toString();
-        var arrUrl = url.split("?" + name + "=");
-        var para = arrUrl[1];
-        console.log(para);
-        if (para)
-            return decodeURI(para);
-    }
+
     function changeCode() {
         document.getElementById("codeImage").src = "/captcha/kaptcha.jpg?" + Math.random();
+    }
+
+    let inputElem = document.getElementById("captchaCode");
+    inputElem.oninput = function(){
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        if (inputElem.value.length === 4) {
+            var data = {
+                "captchaCode": inputElem.value
+            }
+            console.log(data);
+            $.ajax({
+                type: 'post',
+                url: '/validateCaptcha',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    if (response !== 'success') {
+                        layer.msg("验证码错误");
+                        changeCode();
+                    }
+                }
+            });
+        }
     }
 </script>
 </body>

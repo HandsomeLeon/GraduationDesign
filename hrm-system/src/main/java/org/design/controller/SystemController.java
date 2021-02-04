@@ -17,10 +17,7 @@ import org.design.service.SystemService;
 import org.design.utils.ServiceException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -35,11 +32,27 @@ public class SystemController {
     @Resource
     private SystemService systemService;
 
-    /*@RequestMapping("/login")
+    @RequestMapping("/validateCaptcha")
+    @ResponseBody
+    public String validateCaptcha(@RequestBody Map<String, Object> data) {
+        String captchaCode = (String) data.get("captchaCode");
+        Session session = SecurityUtils.getSubject().getSession();
+        String validateCaptcha = (String) session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        if (!validateCaptcha.equalsIgnoreCase(captchaCode)) {
+            return "fail";
+        }
+        return "success";
+    }
+
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
+    }
+
+    @PostMapping("/login")
     public String login(HttpServletRequest request, Model model) {
         System.out.println("正在进行登录操作");
         String message = (String) request.getAttribute("shiroLoginFailure");
-        System.out.println(message);
         if (message != null) {
             if (UnknownAccountException.class.getName().equals(message)) {
                 model.addAttribute("errorMsg", "账号不存在");
@@ -48,37 +61,6 @@ public class SystemController {
             } else if ("验证码错误".equals(message)) {
                 model.addAttribute("errorMsg", "验证码错误");
             } else {
-                model.addAttribute("errorMsg", "服务器错误");
-            }
-        }
-        return "login";
-    }*/
-
-    @RequestMapping("/login")
-    public String login(String username, String password, String captchaCode, Model model) {
-        System.out.println("正在进行登录操作");
-
-        System.out.println(username);
-        System.out.println(password);
-        System.out.println(captchaCode);
-        Subject subject = SecurityUtils.getSubject();
-        Session session = SecurityUtils.getSubject().getSession();
-        UsernamePasswordToken passwordToken = new UsernamePasswordToken(username, password);
-        String validateCode = (String) session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
-        if (captchaCode != null && validateCode != null) {
-            if (!captchaCode.equals(validateCode)) {
-                model.addAttribute("errorMsg", "验证码错误");
-                return "login";
-            }
-        }
-        if (passwordToken.getUsername() != null) {
-            try {
-                subject.login(passwordToken);
-            } catch (UnknownAccountException e) {
-                model.addAttribute("errorMsg", "账号不存在");
-            } catch (IncorrectCredentialsException e) {
-                model.addAttribute("errorMsg", "密码不正确");
-            } catch (Exception e) {
                 model.addAttribute("errorMsg", "服务器错误");
             }
         }

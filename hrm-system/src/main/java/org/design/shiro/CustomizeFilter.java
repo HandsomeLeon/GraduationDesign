@@ -16,6 +16,8 @@ public class CustomizeFilter extends FormAuthenticationFilter {
         String errorMessage = (String) request.getAttribute("shiroLoginFailure");
         if (errorMessage == null) {
             WebUtils.issueRedirect(request, response, getSuccessUrl(), null, true);
+        } else {
+            saveRequestAndRedirectToLogin(request, response);
         }
     }
 

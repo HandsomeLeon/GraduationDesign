@@ -1,9 +1,12 @@
 package org.design.shiro;
 
+import com.google.code.kaptcha.Constants;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.design.model.Employee;
 import org.design.model.Permission;
@@ -11,6 +14,7 @@ import org.design.service.EmployeeService;
 import org.design.service.SystemService;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public class CustomizeRealm extends AuthorizingRealm {

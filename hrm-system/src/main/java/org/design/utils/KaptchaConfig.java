@@ -1,4 +1,4 @@
-package org.design.shiro;
+package org.design.utils;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.servlet.KaptchaServlet;

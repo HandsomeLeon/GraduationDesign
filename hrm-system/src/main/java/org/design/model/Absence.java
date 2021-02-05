@@ -1,9 +1,19 @@
 package org.design.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 public class Absence {
 
+    /**
+     * ID
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     /**
@@ -12,18 +22,19 @@ public class Absence {
     private Integer days;
 
     /**
-     * 请假理由
+     * 请假标题
      */
-    private String content;
+    private String title;
 
     /**
-     * 备注
+     * 请假理由
      */
-    private String remark;
+    private String reason;
 
     /**
      * 请假时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime leaveTime;
 
     /**
@@ -52,20 +63,20 @@ public class Absence {
         this.days = days;
     }
 
-    public String getContent() {
-        return content;
+    public String getTitle() {
+        return title;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getReason() {
+        return reason;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public LocalDateTime getLeaveTime() {
@@ -94,11 +105,11 @@ public class Absence {
 
     @Override
     public String toString() {
-        return "AbsenceForm{" +
+        return "Absence{" +
                 "id=" + id +
                 ", days=" + days +
-                ", content='" + content + '\'' +
-                ", remark='" + remark + '\'' +
+                ", title='" + title + '\'' +
+                ", reason='" + reason + '\'' +
                 ", leaveTime=" + leaveTime +
                 ", state=" + state +
                 ", userId=" + userId +

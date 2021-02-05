@@ -53,12 +53,10 @@ public class ShiroConfig {
         map.put("/validateCaptcha", "anon");
         //登出
         map.put("/logout", "logout");
-        //登录 需要被自定义拦截器拦截获取验证码
-        //map.put("/login", "captchaValidate,authc");
         //对所有用户认证
         map.put("/**", "authc");//authc表示需要认证才可以访问,anon表示可以匿名访问
-
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
+
         //登录
         shiroFilterFactoryBean.setLoginUrl("/login");
         //首页
@@ -68,10 +66,7 @@ public class ShiroConfig {
 
         // 自定义拦截器
         Map<String, Filter> filterMap = shiroFilterFactoryBean.getFilters();
-        //filterMap.put("captchaValidate", new CaptchaValidateFilter());
         filterMap.put("authc", new CustomizeFilter());
-        // 设置自定义Filter
-        // shiroFilterFactoryBean.setFilters(filterMap);
         return shiroFilterFactoryBean;
     }
 

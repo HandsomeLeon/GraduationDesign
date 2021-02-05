@@ -8,6 +8,7 @@ import org.design.model.Department;
 import org.design.service.DepartmentService;
 import org.design.utils.ServiceException;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.HashMap;

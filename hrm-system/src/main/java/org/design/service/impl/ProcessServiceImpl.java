@@ -53,6 +53,9 @@ public class ProcessServiceImpl implements ProcessService {
     @Resource
     private ReimbursementService reimbursementService;
 
+    public final static String REIMBURSEMENT_KEY = "baoxiaoprocess";
+    public final static String ABSENCE_KEY = "AbsenceProcess";
+
 
     @Override
     public void save(InputStream inputStream, String processName) {
@@ -70,17 +73,14 @@ public class ProcessServiceImpl implements ProcessService {
         }
     }
 
+    @Transactional
     @Override
-    public void startProcess(Integer id, String username) {
-
+    public void startProcess(Integer applicationId, String username, String processKey) {
         Map<String, Object> map = new HashMap<>();
-
-        String key = "baoxiaoprocess";
-        String BUSINESS_KEY = key + "." + id.toString();
+        String BUSINESS_KEY = processKey + "." + applicationId;
         map.put("inputUser", username);
         map.put("objId", BUSINESS_KEY);
-
-        runtimeService.startProcessInstanceByKey(key, BUSINESS_KEY, map);
+        runtimeService.startProcessInstanceByKey(processKey, BUSINESS_KEY, map);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public String findReimbursement(String taskId) {
+    public String findApplication(String taskId) {
 
         Task task = this.taskService
                 .createTaskQuery().taskId(taskId).singleResult();
@@ -203,29 +203,23 @@ public class ProcessServiceImpl implements ProcessService {
     public List<String> findFlowDirectionList(String taskId) {
         //·创建 部门经理 提交流程的所有连线
         List<String> flowDirectionList = new ArrayList<>();
-
         //·获取当前正在执行的任务
         Task task = this.taskService
                 .createTaskQuery()
                 .taskId(taskId)
                 .singleResult();
-
         //·获取 流程定义 实体
         ProcessDefinitionEntity definitionEntity = (ProcessDefinitionEntity) this.repositoryService
                 .getProcessDefinition(task.getProcessDefinitionId());
-
         //·获取流程实例
         ProcessInstance processInstance = this.runtimeService
                 .createProcessInstanceQuery()
                 .processInstanceId(task.getProcessInstanceId())
                 .singleResult();
-
         //·获取当前活动的id
         String activityId = processInstance.getActivityId();
-
         //·获取当前的活动
         ActivityImpl activityImpl = definitionEntity.findActivity(activityId);
-
         //·获取当前活动的所有连线
         List<PvmTransition> pvmTransitionList = activityImpl.getOutgoingTransitions();
 
@@ -249,10 +243,14 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Transactional
     @Override
-    public void pushProcess(String taskId, String username, String comment, String flowDirection, String reimbursementId) {
+    public void pushProcess(String taskId, String username, String comment, String flowDirection, String applicationId) {
         Task task = this.taskService.createTaskQuery().taskId(taskId).singleResult();
         // 流程定义实例ID
         String processInstanceId = task.getProcessInstanceId();
+        ProcessInstance oldProcessInstance = this.runtimeService
+                .createProcessInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .singleResult();
         //·添加批注中批注人名称
         Authentication.setAuthenticatedUserId(username);
         //·添加批注
@@ -275,19 +273,26 @@ public class ProcessServiceImpl implements ProcessService {
                 .singleResult();
         //·流程结束后  设置报销表的状态为  结束（即为2）
         if (processInstance == null) {
-            this.reimbursementService.updateState(reimbursementId, 2);
+            String businessKey = oldProcessInstance.getBusinessKey();
+            String processKey = businessKey.substring(0, businessKey.lastIndexOf(".") - 1);
+            if (REIMBURSEMENT_KEY.equalsIgnoreCase(processKey)) {
+                this.reimbursementService.updateState(applicationId, 2);
+            } else {
+                this.absenceService.updateState(applicationId, 2);
+            }
         }
+
     }
 
     @Override
-    public Task findTaskByReimbursementId(Integer reimbursementId) {
-        String BUSINESS_KEY = "baoxiaoprocess." + reimbursementId;
+    public Task findTaskByApplicationId(Integer applicationId, String processKey) {
+        String BUSINESS_KEY = processKey + "." + applicationId;
         return this.taskService.createTaskQuery().processInstanceBusinessKey(BUSINESS_KEY).singleResult();
     }
 
     @Override
-    public List<CustomizeComment> findHistoricalCommentList(Integer reimbursementId) {
-        String BUSINESS_KEY = "baoxiaoprocess." + reimbursementId;
+    public List<CustomizeComment> findHistoricalCommentList(Integer applicationId, String processKey) {
+        String BUSINESS_KEY = processKey + "." + applicationId;
         HistoricProcessInstance historicProcessInstance = this.historyService
                 .createHistoricProcessInstanceQuery()
                 .processInstanceBusinessKey(BUSINESS_KEY)

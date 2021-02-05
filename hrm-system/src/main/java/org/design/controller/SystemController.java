@@ -1,27 +1,20 @@
 package org.design.controller;
 
 import com.google.code.kaptcha.Constants;
-import org.activiti.engine.task.Task;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.design.model.Employee;
 import org.design.model.MenuTree;
 import org.design.model.Role;
 import org.design.service.SystemService;
-import org.design.utils.ServiceException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,8 +51,6 @@ public class SystemController {
                 model.addAttribute("errorMsg", "账号不存在");
             } else if (IncorrectCredentialsException.class.getName().equals(message)) {
                 model.addAttribute("errorMsg", "密码不正确");
-            } else if ("验证码错误".equals(message)) {
-                model.addAttribute("errorMsg", "验证码错误");
             } else {
                 model.addAttribute("errorMsg", "服务器错误");
             }

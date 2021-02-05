@@ -1,10 +1,14 @@
 package org.design.model;
 
+import javax.persistence.Id;
+
 public class Department {
+
     /**
      * id
      * 自增 插入数据时不需要传参数
      */
+    @Id
     private Integer id;
     /**
      * 部门名称 （必需）

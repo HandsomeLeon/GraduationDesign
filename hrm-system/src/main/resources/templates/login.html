@@ -42,7 +42,7 @@
             <label class="layui-form-label" style="width: 100px; margin-top: 14px;">验证码&nbsp;<i class="layui-icon">&#xe679;</i></label>
             <div class="layui-input-inline" style=" margin-top: 14px;">
                 <input type="text" style="width: 100px; float: left;" id="captchaCode"
-                       lay-verify="captcha" placeholder="验证码" autocomplete="off" class="layui-input">
+                       lay-verify="captchaCode" placeholder="验证码" autocomplete="off" class="layui-input">
                 <img src="../captcha/kaptcha.jpg" id="codeImage" onclick="changeCode()" title="图片看不清？点击重新得到验证码"
                      style="position: absolute; left: 120px; width: 100px; height: 38px; cursor:pointer;"/>
             </div>
@@ -76,7 +76,7 @@
                 }
                 pass = value;
             },
-            captcha: function (value) {
+            captchaCode: function (value) {
                 if (value.length < 4) {
                     return '验证码不够4位';
                 }
@@ -85,6 +85,8 @@
     });
 
     function changeCode() {
+        let inputElem = document.getElementById("captchaCode");
+        inputElem.value = '';
         document.getElementById("codeImage").src = "/captcha/kaptcha.jpg?" + Math.random();
     }
 
@@ -92,7 +94,7 @@
     inputElem.oninput = function(){
         var $ = layui.jquery;
         var layer = layui.layer;
-        if (inputElem.value.length === 4) {
+        if (inputElem.value.length >= 4) {
             var data = {
                 "captchaCode": inputElem.value
             }
@@ -105,6 +107,7 @@
                 success: function (response) {
                     if (response !== 'success') {
                         layer.msg("验证码错误");
+                        inputElem.value = '';
                         changeCode();
                     }
                 }

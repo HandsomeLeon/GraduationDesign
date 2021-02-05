@@ -1,19 +1,12 @@
 package org.design.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
-import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.apache.shiro.SecurityUtils;
-import org.design.model.CustomizeComment;
-import org.design.model.CustomizeTask;
-import org.design.model.Employee;
-import org.design.model.Reimbursement;
+import org.design.model.*;
+import org.design.service.AbsenceService;
 import org.design.service.ProcessService;
 import org.design.service.ReimbursementService;
-import org.design.utils.ServiceException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,10 +20,12 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.design.service.impl.ProcessServiceImpl.ABSENCE_KEY;
+import static org.design.service.impl.ProcessServiceImpl.REIMBURSEMENT_KEY;
 
 @Controller
 @RequestMapping("/process")
@@ -40,6 +35,8 @@ public class ProcessController {
     private ProcessService processService;
     @Resource
     private ReimbursementService reimbursementService;
+    @Resource
+    private AbsenceService absenceService;
 
     /**
      * 跳转发布流程页面
@@ -104,9 +101,14 @@ public class ProcessController {
         inputStream.close();
     }
 
-    @RequestMapping("/taskListPage")
-    public String findTaskListPage() {
-        return "task_list";
+    @RequestMapping("/reimbursementTaskListPage")
+    public String reimbursementTaskListPage() {
+        return "reimbursementTask_list";
+    }
+
+    @RequestMapping("/absenceTaskListPage")
+    public String absenceTaskListPage() {
+        return "absenceTask_list";
     }
 
     @RequestMapping("findTaskList")
@@ -122,15 +124,26 @@ public class ProcessController {
         return data;
     }
 
-    @RequestMapping("/taskPage/{taskId}")
-    public String taskPage(@PathVariable String taskId, Model model) {
-        String reimbursementId = processService.findReimbursement(taskId);
+    @RequestMapping("/reimbursementTaskPage/{taskId}")
+    public String reimbursementTaskPage(@PathVariable String taskId, Model model) {
+        String reimbursementId = processService.findApplication(taskId);
         Reimbursement reimbursement = reimbursementService.get(Integer.parseInt(reimbursementId));
         List<String> flowDirectionList = processService.findFlowDirectionList(taskId);
         model.addAttribute("taskId", taskId);
         model.addAttribute("reimbursement", reimbursement);
         model.addAttribute("flowDirectionList", flowDirectionList);
-        return "task_update";
+        return "reimbursement_update";
+    }
+
+    @RequestMapping("/absenceTaskPage/{taskId}")
+    public String absenceTaskPage(@PathVariable String taskId, Model model) {
+        String absenceId = processService.findApplication(taskId);
+        Absence absence = absenceService.get(Integer.parseInt(absenceId));
+        List<String> flowDirectionList = processService.findFlowDirectionList(taskId);
+        model.addAttribute("taskId", taskId);
+        model.addAttribute("absence", absence);
+        model.addAttribute("flowDirectionList", flowDirectionList);
+        return "absence_update";
     }
 
     @RequestMapping("/findCommentList")
@@ -152,39 +165,81 @@ public class ProcessController {
         String comment = (String) param.get("comment");
         String flowDirection = (String) param.get("flowDirection");
         String reimbursementId = (String) param.get("reimbursementId");
+        String absenceId = (String) param.get("absenceId");
 
         Employee employee = (Employee) SecurityUtils.getSubject().getPrincipal();
-        processService.pushProcess(taskId, employee.getUsername(), comment, flowDirection, reimbursementId);
+        if (reimbursementId != null) {
+            processService.pushProcess(taskId, employee.getUsername(), comment, flowDirection, reimbursementId);
+        }
+        if (absenceId != null) {
+            processService.pushProcess(taskId, employee.getUsername(), comment, flowDirection, absenceId);
+        }
         return "success";
     }
 
-    @RequestMapping("/findTaskRecord/{reimbursementId}")
-    public String findCommentRecord(@PathVariable Integer reimbursementId, Model model) {
+    @RequestMapping("/findReimbursementRecord/{reimbursementId}")
+    public String findReimbursementRecord(@PathVariable Integer reimbursementId, Model model) {
         Reimbursement reimbursement = reimbursementService.get(reimbursementId);
         List<CustomizeComment> commentList;
         // 报销单审核状态为正在审核中
         if (reimbursement.getState() != 2) {
-            Task task = processService.findTaskByReimbursementId(reimbursementId);
+            Task task = processService.findTaskByApplicationId(reimbursementId, REIMBURSEMENT_KEY);
             commentList = processService.findCommentList(task.getId());
         } else {
-            commentList = processService.findHistoricalCommentList(reimbursementId);
+            commentList = processService.findHistoricalCommentList(reimbursementId, REIMBURSEMENT_KEY);
         }
         model.addAttribute("reimbursement", reimbursement);
         model.addAttribute("commentList", commentList);
-        return "task_record";
+        return "reimbursement_record";
     }
 
-    @RequestMapping("/findHistoricalCommentList")
+    @RequestMapping("/findAbsenceRecord/{absenceId}")
+    public String findAbsenceRecord(@PathVariable Integer absenceId, Model model) {
+        Absence absence = absenceService.get(absenceId);
+        List<CustomizeComment> commentList;
+        // 报销单审核状态为正在审核中
+        if (absence.getState() != 2) {
+            Task task = processService.findTaskByApplicationId(absenceId, ABSENCE_KEY);
+            commentList = processService.findCommentList(task.getId());
+        } else {
+            commentList = processService.findHistoricalCommentList(absenceId, ABSENCE_KEY);
+        }
+        model.addAttribute("absence", absence);
+        model.addAttribute("commentList", commentList);
+        return "absence_record";
+    }
+
+    @RequestMapping("/findHistoricalReimbursementCommentList")
     @ResponseBody
-    public Map<String, Object> findHistoricalCommentList(Integer reimbursementId) {
+    public Map<String, Object> findHistoricalReimbursementCommentList(Integer reimbursementId) {
         Reimbursement reimbursement = reimbursementService.get(reimbursementId);
-        Task task = processService.findTaskByReimbursementId(reimbursementId);
+        Task task = processService.findTaskByApplicationId(reimbursementId, REIMBURSEMENT_KEY);
         List<CustomizeComment> commentList;
         // 报销单审核状态为正在审核中
         if (reimbursement.getState() != 2) {
             commentList = processService.findCommentList(task.getId());
         } else {
-            commentList = processService.findHistoricalCommentList(reimbursementId);
+            commentList = processService.findHistoricalCommentList(reimbursementId, REIMBURSEMENT_KEY);
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", 0);
+        data.put("msg", "");
+        data.put("count", commentList.size());
+        data.put("data", commentList);
+        return data;
+    }
+
+    @RequestMapping("/findHistoricalAbsenceCommentList")
+    @ResponseBody
+    public Map<String, Object> findHistoricalAbsenceCommentList(Integer absenceId) {
+        Absence absence = absenceService.get(absenceId);
+        Task task = processService.findTaskByApplicationId(absenceId, ABSENCE_KEY);
+        List<CustomizeComment> commentList;
+        // 报销单审核状态为正在审核中
+        if (absence.getState() != 2) {
+            commentList = processService.findCommentList(task.getId());
+        } else {
+            commentList = processService.findHistoricalCommentList(absenceId, ABSENCE_KEY);
         }
         Map<String, Object> data = new HashMap<>();
         data.put("code", 0);
@@ -200,9 +255,6 @@ public class ProcessController {
         Map<String, Object> coordinatesMap = processService.findCurrentProcessCoordinates(taskId);
         System.out.println(processDefinition.getDeploymentId());
         System.out.println(processDefinition.getDiagramResourceName());
-        for (Map.Entry<String, Object> entry : coordinatesMap.entrySet()) {
-            System.out.println(entry);
-        }
         model.addAttribute("deploymentId", processDefinition.getDeploymentId());
         model.addAttribute("imageName", processDefinition.getDiagramResourceName());
         model.addAttribute("acs", coordinatesMap);
@@ -211,14 +263,22 @@ public class ProcessController {
 
     @RequestMapping("/findCurrentProcessImageByReimbursementId/{reimbursementId}")
     public String findCurrentProcessImageByReimbursementId(@PathVariable Integer reimbursementId, Model model) {
-        Task task = processService.findTaskByReimbursementId(reimbursementId);
+        Task task = processService.findTaskByApplicationId(reimbursementId, REIMBURSEMENT_KEY);
         ProcessDefinition processDefinition = processService.findProcessDefinition(task.getId());
         Map<String, Object> coordinatesMap = processService.findCurrentProcessCoordinates(task.getId());
         System.out.println(processDefinition.getDeploymentId());
         System.out.println(processDefinition.getDiagramResourceName());
-        for (Map.Entry<String, Object> entry : coordinatesMap.entrySet()) {
-            System.out.println(entry);
-        }
+        model.addAttribute("deploymentId", processDefinition.getDeploymentId());
+        model.addAttribute("imageName", processDefinition.getDiagramResourceName());
+        model.addAttribute("acs", coordinatesMap);
+        return "process_image";
+    }
+
+    @RequestMapping("/findCurrentProcessImageByAbsenceId/{absenceId}")
+    public String findCurrentProcessImageByAbsenceId(@PathVariable Integer absenceId, Model model) {
+        Task task = processService.findTaskByApplicationId(absenceId, ABSENCE_KEY);
+        ProcessDefinition processDefinition = processService.findProcessDefinition(task.getId());
+        Map<String, Object> coordinatesMap = processService.findCurrentProcessCoordinates(task.getId());
         model.addAttribute("deploymentId", processDefinition.getDeploymentId());
         model.addAttribute("imageName", processDefinition.getDiagramResourceName());
         model.addAttribute("acs", coordinatesMap);

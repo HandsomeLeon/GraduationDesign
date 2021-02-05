@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static org.design.service.impl.ProcessServiceImpl.REIMBURSEMENT_KEY;
+
 @Controller
 @RequestMapping("/reimbursement")
 public class ReimbursementController {
@@ -40,7 +42,7 @@ public class ReimbursementController {
         reimbursement.setUserId(Long.parseLong(employee.getId().toString()));
 
         reimbursementService.save(reimbursement);
-        processService.startProcess(reimbursement.getId(), employee.getUsername());
+        processService.startProcess(reimbursement.getId(), employee.getUsername(), REIMBURSEMENT_KEY);
         return "success";
     }
 
@@ -80,7 +82,6 @@ public class ReimbursementController {
     @ResponseBody
     public String batchDelete(@RequestBody List<Integer> idList) {
         for (Integer id : idList) {
-            System.out.println(id);
             reimbursementService.delete(id);
         }
         return "success";

@@ -10,7 +10,7 @@ public class Reimbursement {
 
     private String title;
 
-    private String remark;
+    private String reason;
 
     private LocalDateTime createTime;
 
@@ -42,12 +42,12 @@ public class Reimbursement {
 		this.title = title;
 	}
 
-	public String getRemark() {
-		return remark;
+	public String getReason() {
+		return reason;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 	public LocalDateTime getCreateTime() {
@@ -80,7 +80,7 @@ public class Reimbursement {
 				"id=" + id +
 				", money=" + money +
 				", title='" + title + '\'' +
-				", remark='" + remark + '\'' +
+				", reason='" + reason + '\'' +
 				", createTime=" + createTime +
 				", state=" + state +
 				", userId=" + userId +

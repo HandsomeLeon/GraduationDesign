@@ -58,7 +58,6 @@ public class ReimbursementServiceImpl implements ReimbursementService {
             throw new ServiceException("获取数据失败");
         }
         PageInfo<Reimbursement> pageInfo = new PageInfo<>(reimbursementList);
-
         Map<String, Object> data = new HashMap<>();
         data.put("code", 0);
         data.put("msg", "");

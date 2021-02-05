@@ -13,12 +13,7 @@ public class CustomizeFilter extends FormAuthenticationFilter {
 
     @Override
     protected void issueSuccessRedirect(ServletRequest request, ServletResponse response) throws Exception {
-        String errorMessage = (String) request.getAttribute("shiroLoginFailure");
-        if (errorMessage == null) {
-            WebUtils.issueRedirect(request, response, getSuccessUrl(), null, true);
-        } else {
-            saveRequestAndRedirectToLogin(request, response);
-        }
+        WebUtils.issueRedirect(request, response, getSuccessUrl(), null, true);
     }
 
 }

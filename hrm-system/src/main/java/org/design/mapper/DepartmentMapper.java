@@ -1,6 +1,7 @@
 package org.design.mapper;
 
 import org.design.model.Department;
+import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 

@@ -21,7 +21,7 @@ public interface ProcessService {
      */
     void save(InputStream inputStream, String processName);
 
-    void startProcess(Integer id, String username);
+    void startProcess(Integer absenceId, String username, String processKey);
 
     Map<String, Object> findDeploymentList(Integer page, Integer limit);
 
@@ -33,17 +33,17 @@ public interface ProcessService {
 
     List<CustomizeTask> findTaskList(String username);
 
-    String findReimbursement(String taskId);
+    String findApplication(String taskId);
 
     List<CustomizeComment> findCommentList(String taskId);
 
     List<String> findFlowDirectionList(String taskId);
 
-    void pushProcess(String taskId, String username, String comment, String flowDirection, String reimbursementId);
+    void pushProcess(String taskId, String username, String comment, String flowDirection, String applicationId);
 
-    Task findTaskByReimbursementId(Integer reimbursementId);
+    Task findTaskByApplicationId(Integer applicationId, String processKey);
 
-    List<CustomizeComment> findHistoricalCommentList(Integer reimbursementId);
+    List<CustomizeComment> findHistoricalCommentList(Integer applicationId, String processKey);
 
     ProcessDefinition findProcessDefinition(String taskId);
 

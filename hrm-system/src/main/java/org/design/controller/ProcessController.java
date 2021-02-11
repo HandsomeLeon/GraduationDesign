@@ -111,11 +111,24 @@ public class ProcessController {
         return "absenceTask_list";
     }
 
-    @RequestMapping("findTaskList")
+    @RequestMapping("findReimbursementTaskList")
     @ResponseBody
-    public Map<String, Object> findTaskList() {
+    public Map<String, Object> findReimbursementTaskList() {
         Employee employee = (Employee) SecurityUtils.getSubject().getPrincipal();
-        List<CustomizeTask> taskList = processService.findTaskList(employee.getUsername());
+        List<CustomizeTask> taskList = processService.findTaskListByBusinessKey(employee.getUsername(), REIMBURSEMENT_KEY);
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", 0);
+        data.put("msg", "");
+        data.put("count", taskList.size());
+        data.put("data", taskList);
+        return data;
+    }
+
+    @RequestMapping("findAbsenceTaskList")
+    @ResponseBody
+    public Map<String, Object> findAbsenceTaskList() {
+        Employee employee = (Employee) SecurityUtils.getSubject().getPrincipal();
+        List<CustomizeTask> taskList = processService.findTaskListByBusinessKey(employee.getUsername(), ABSENCE_KEY);
         Map<String, Object> data = new HashMap<>();
         data.put("code", 0);
         data.put("msg", "");

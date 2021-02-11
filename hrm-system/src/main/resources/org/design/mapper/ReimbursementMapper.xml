@@ -6,14 +6,14 @@
         <id property="id" column="id" />
         <result property="money" column="money" />
         <result property="title" column="title" />
-        <result property="remark" column="remark" />
+        <result property="reason" column="reason" />
         <result property="createTime" column="create_time" />
         <result property="state" column="state" />
         <result property="userId" column="user_id" />
     </resultMap>
 
     <insert id="save" parameterType="Reimbursement">
-        insert into reimbursement values (null, #{money}, #{title}, #{remark},
+        insert into reimbursement values (null, #{money}, #{title}, #{reason},
         #{createTime}, #{state}, #{userId});
         <selectKey keyProperty="id" resultType="Integer" order="AFTER">
             SELECT LAST_INSERT_ID();

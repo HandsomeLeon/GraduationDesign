@@ -87,6 +87,9 @@
                             if (response === 'success') {
                                 layer.msg('删除成功');
                             }
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000);
                         },
                         error: function () {
                             layer.msg("操作失败");

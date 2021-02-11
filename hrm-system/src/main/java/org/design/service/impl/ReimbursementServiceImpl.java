@@ -73,8 +73,8 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
     @Override
     public void updateState(String reimbursementId, Integer state) {
-        Integer result = reimbursementMapper.updateState(reimbursementId, state.toString());
-        if (result == null) {
+        Integer result = reimbursementMapper.updateState(state.toString(), reimbursementId);
+        if (result <= 0) {
             throw new ServiceException("操作失败");
         }
     }

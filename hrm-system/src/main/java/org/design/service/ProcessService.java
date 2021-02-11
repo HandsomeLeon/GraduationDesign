@@ -31,7 +31,7 @@ public interface ProcessService {
 
     InputStream findProcessImage(String id, String imageName);
 
-    List<CustomizeTask> findTaskList(String username);
+    List<CustomizeTask> findTaskListByBusinessKey(String username, String businessKey);
 
     String findApplication(String taskId);
 

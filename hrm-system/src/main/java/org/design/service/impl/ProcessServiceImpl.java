@@ -57,6 +57,7 @@ public class ProcessServiceImpl implements ProcessService {
     public final static String ABSENCE_KEY = "AbsenceProcess";
 
 
+    @Transactional
     @Override
     public void save(InputStream inputStream, String processName) {
 
@@ -147,20 +148,33 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public List<CustomizeTask> findTaskList(String username) {
+    public List<CustomizeTask> findTaskListByBusinessKey(String username, String businessKey) {
 
         List<Task> taskList = this.taskService
                 .createTaskQuery().taskAssignee(username).orderByTaskCreateTime().desc().list();
-        List<CustomizeTask> customizeTaskList = new ArrayList<>();
+        List<CustomizeTask> reimbursementTaskList = new ArrayList<>();
+        List<CustomizeTask> absenceTaskList = new ArrayList<>();
         for (Task task : taskList) {
             CustomizeTask customizeTask = new CustomizeTask();
             customizeTask.setId(task.getId());
             customizeTask.setName(task.getName());
             customizeTask.setAssignee(task.getAssignee());
             customizeTask.setCreateTime(task.getCreateTime());
-            customizeTaskList.add(customizeTask);
+            ProcessInstance processInstance = this.runtimeService
+                    .createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
+            String keyStr = processInstance.getBusinessKey();
+            String key = keyStr.substring(0, keyStr.lastIndexOf("."));
+            if (REIMBURSEMENT_KEY.equals(key)) {
+                reimbursementTaskList.add(customizeTask);
+            } else if (ABSENCE_KEY.equals(key)) {
+                absenceTaskList.add(customizeTask);
+            }
         }
-        return customizeTaskList;
+        if (REIMBURSEMENT_KEY.equals(businessKey)) {
+            return reimbursementTaskList;
+        } else {
+            return absenceTaskList;
+        }
     }
 
     @Override
@@ -274,7 +288,7 @@ public class ProcessServiceImpl implements ProcessService {
         //·流程结束后  设置报销表的状态为  结束（即为2）
         if (processInstance == null) {
             String businessKey = oldProcessInstance.getBusinessKey();
-            String processKey = businessKey.substring(0, businessKey.lastIndexOf(".") - 1);
+            String processKey = businessKey.substring(0, businessKey.lastIndexOf("."));
             if (REIMBURSEMENT_KEY.equalsIgnoreCase(processKey)) {
                 this.reimbursementService.updateState(applicationId, 2);
             } else {

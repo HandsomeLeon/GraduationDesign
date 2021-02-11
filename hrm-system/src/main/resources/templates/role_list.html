@@ -89,7 +89,7 @@
                     shadeClose: true,
                     shade: 0.7,
                     area: ['720px', '90%'],
-                    content: ['/role/updatePage/' + data.id, 'no'], //iframe的url, no不显示滚动条
+                    content: ['/role/updatePage/' + data.id, ''], //iframe的url, no不显示滚动条
                     end: function () {                   //请求回调，窗口销毁时执行
                         location.reload();                  //窗口销毁时刷新主页面数据
                     }

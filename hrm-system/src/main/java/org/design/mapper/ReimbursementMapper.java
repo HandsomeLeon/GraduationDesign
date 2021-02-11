@@ -16,7 +16,7 @@ public interface ReimbursementMapper {
 
     Reimbursement get(Integer id);
 
-    Integer updateState(String id, String state);
+    Integer updateState(@Param("state") String state, @Param("id") String id);
 
     List<Reimbursement> findByState(Integer state);
 
